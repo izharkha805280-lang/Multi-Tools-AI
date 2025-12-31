@@ -26,23 +26,38 @@
 
         <div id="result" style="margin-top: 20px; display: none;">
             <h3>Your BMI: <span id="bmi-value">0</span></h3>
-            <p id="bmi-status" style="font-weight:bold; color:#764ba2;"></p>
+            <p id="bmi-status" style="font-weight:bold; color:#6C63FF;"></p>
         </div>
 
         <a href="index.html" class="back-btn">← Back to Home</a>
     </div>
+
+    <footer>
+        <p>&copy; 2025 SuperTools. All rights reserved.</p>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 
     <script>
         function calculateBMI() {
             const weight = parseFloat(document.getElementById('weight').value);
             const height = parseFloat(document.getElementById('height').value);
 
+            // Error Handling Logic
             if (!weight || !height) {
-                alert("Please enter both weight and height!");
+                showError("Please enter valid Weight and Height!"); // New Error Style
+                return;
+            }
+            if (weight < 0 || height < 0) {
+                showError("Values cannot be negative!");
                 return;
             }
 
-            // Formula: weight / (height in meters squared)
             const bmi = (weight / ((height / 100) * (height / 100))).toFixed(1);
             
             let status = "";
@@ -54,15 +69,9 @@
             document.getElementById('bmi-value').innerText = bmi;
             document.getElementById('bmi-status').innerText = status;
             document.getElementById('result').style.display = 'block';
+            
+            showSuccess("BMI Calculated Successfully!"); // Success Message
         }
     </script>
-    <footer>
-        <p>&copy; 2025 SuperTools. All rights reserved.</p>
-        <div>
-            <a href="index.html">Home</a>
-            <a href="contact.html">Contact Us</a>
-            <a href="privacy.html">Privacy Policy</a>
-        </div>
-    </footer>
 </body>
 </html>
