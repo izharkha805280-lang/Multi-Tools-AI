@@ -4,8 +4,9 @@
 :root {
     --primary-color: #6C63FF;
     --secondary-color: #ff6584;
-    --bg-color: #f8f9fa; /* Thoda sa light gray taaki white cards pop karein */
+    --bg-color: #f8f9fa;
     --text-color: #333;
+    --card-bg: #ffffff;
 }
 
 * {
@@ -15,17 +16,14 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- BODY STYLES (Fixes Footer Position) --- */
+/* --- BODY STYLES (Footer Fix) --- */
 body {
     background-color: var(--bg-color);
     background-image: 
         radial-gradient(at 0% 0%, rgba(108, 99, 255, 0.08) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(255, 101, 132, 0.08) 0px, transparent 50%);
-    background-attachment: fixed; /* Background hilna nahi chahiye */
+    background-attachment: fixed;
     color: var(--text-color);
-    line-height: 1.6;
-    
-    /* Ye 3 lines footer ko bottom par rakhti hain */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -54,33 +52,31 @@ body {
     text-decoration: none;
 }
 
-/* Header Section */
+/* Header Section (Homepage) */
 .header-section {
     text-align: center;
     padding: 60px 20px;
-    flex: 1; /* Ye content ko failne deta hai taaki footer niche jaye */
 }
 
-/* Tool Cards Design (Improved for Mobile) */
+/* --- HOMEPAGE TOOLS GRID --- */
 .tools-grid {
     display: grid;
-    /* Mobile par 1 column, bade screen par auto-fit */
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
-    padding: 0 5% 4rem 5%; /* Bottom padding badhai hai */
+    padding: 0 5% 4rem 5%;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
 }
 
 .tool-card {
-    background: white;
+    background: var(--card-bg);
     padding: 35px 25px;
     border-radius: 16px;
     text-align: center;
     text-decoration: none;
     color: var(--text-color);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04); /* Thoda better shadow */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
     border: 1px solid rgba(0,0,0,0.03);
     transition: all 0.3s ease;
 }
@@ -92,7 +88,7 @@ body {
 }
 
 .tool-icon {
-    font-size: 3.2rem;
+    font-size: 3rem;
     display: block;
     margin-bottom: 15px;
 }
@@ -103,61 +99,73 @@ body {
     margin-bottom: 8px;
 }
 
-.tool-card p {
-    font-size: 0.95rem;
-    color: #666;
-}
-
-/* --- FOOTER (Fixed) --- */
-footer {
-    background: #1a202c;
-    color: #a0aec0;
-    padding: 30px 20px;
+/* --- INNER TOOL PAGES DESIGN (Ye missing tha!) --- */
+.tool-container {
+    background: white;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     text-align: center;
-    margin-top: auto; /* Sabse important line: Ye footer ko push karta hai */
+    width: 90%; /* Mobile par side se kat na jaye */
+}
+
+/* Inputs Styling */
+input, select {
     width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #fcfcfc;
+    transition: 0.3s;
 }
 
-footer p {
-    margin-bottom: 15px;
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
 }
 
-footer div {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
+/* Button Styling */
+button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+    transition: 0.3s;
 }
 
-footer a {
-    color: #cbd5e0;
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    color: #666;
+    font-weight: 500;
     text-decoration: none;
     font-size: 0.9rem;
     transition: 0.3s;
 }
 
-footer a:hover {
+.back-btn:hover {
     color: var(--primary-color);
-    text-decoration: underline;
 }
 
-/* Mobile specific adjustments */
-@media (max-width: 600px) {
-    .navbar {
-        padding: 1rem;
-    }
-    .logo {
-        font-size: 1.3rem;
-    }
-    .header-section h1 {
-        font-size: 1.8rem;
-    }
-    .tools-grid {
-        padding: 0 20px 3rem 20px;
-        grid-template-columns: 1fr; /* Force single column on small mobile */
-    }
-}
-/* --- Toast Notification (Error/Success Messages) --- */
+/* --- TOAST NOTIFICATION --- */
 #toast-box {
     position: fixed;
     bottom: 30px;
@@ -169,35 +177,54 @@ footer a:hover {
 }
 
 .toast {
-    width: 350px;
-    height: 60px;
+    width: 320px;
     background: #fff;
     font-weight: 500;
     margin: 10px 0;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
-    position: relative;
-    transform: translateX(100%);
-    animation: moveleft 0.5s linear forwards;
+    padding: 15px;
     border-radius: 8px;
-    overflow: hidden;
+    animation: moveleft 0.5s ease-out forwards;
+    border-left: 6px solid;
 }
 
+.toast.error { border-left-color: #ff3b3b; }
+.toast.success { border-left-color: #2dce89; }
+
 @keyframes moveleft {
-    100% { transform: translateX(0); }
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 .toast i {
-    margin: 0 20px;
-    font-size: 25px;
+    margin-right: 15px;
+    font-size: 20px;
 }
 
-.toast.error i { color: #ff3b3b; }
-.toast.success i { color: #2dce89; }
-.toast.error::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 5px; background: #ff3b3b; animation: anim 4s linear forwards; }
-.toast.success::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 5px; background: #2dce89; animation: anim 4s linear forwards; }
-
-@keyframes anim {
-    100% { width: 0; }
+/* --- FOOTER --- */
+footer {
+    background: #1a202c;
+    color: #a0aec0;
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: auto; /* Push to bottom */
+    width: 100%;
 }
+
+footer a {
+    color: #cbd5e0;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 0.9rem;
+}
+
+footer a:hover { color: var(--primary-color); }
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .tools-grid { grid-template-columns: 1fr; }
+    .tool-container { padding: 25px; margin: 20px auto; }
+    h1 { font-size: 1.5rem; }
+        }
