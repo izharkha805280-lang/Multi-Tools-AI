@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Thumbnail Downloader - SuperTools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+    </nav>
+
+    <div class="tool-container">
+        <h1>📺 YT Thumbnail Grabber</h1>
+        <p>Paste any YouTube video link to get the HD Thumbnail.</p>
+        
+        <input type="text" id="videoUrl" placeholder="Paste YouTube Link (e.g., https://youtu.be/...)">
+        
+        <button onclick="getThumbnail()">Get Thumbnail</button>
+
+        <div id="resultArea" style="display:none; margin-top: 30px;">
+            <img id="thumbImg" src="" style="width: 100%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 15px;">
+            
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Right click on image & select "Save Image As" to download.</p>
+            
+            <a id="downloadBtn" href="" target="_blank">
+                <button style="background: #2dce89;">View Full HD Image</button>
+            </a>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 SuperTools. All rights reserved.</p>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+    <script>
+        function getThumbnail() {
+            const url = document.getElementById('videoUrl').value;
+            const resultArea = document.getElementById('resultArea');
+            const thumbImg = document.getElementById('thumbImg');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            if (!url) {
+                showError("Please paste a URL first!");
+                return;
+            }
+
+            // Extract Video ID Logic
+            let videoId = "";
+            
+            // Format 1: https://www.youtube.com/watch?v=VIDEO_ID
+            if (url.indexOf("v=") !== -1) {
+                videoId = url.split("v=")[1];
+                const ampersandPosition = videoId.indexOf("&");
+                if (ampersandPosition !== -1) {
+                    videoId = videoId.substring(0, ampersandPosition);
+                }
+            } 
+            // Format 2: https://youtu.be/VIDEO_ID
+            else if (url.indexOf("youtu.be/") !== -1) {
+                videoId = url.split("youtu.be/")[1];
+            }
+
+            if (videoId.length > 0) {
+                // Generate Thumbnail URL
+                const imgUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                
+                thumbImg.src = imgUrl;
+                downloadBtn.href = imgUrl;
+                resultArea.style.display = "block";
+                showSuccess("Thumbnail Found!");
+            } else {
+                showError("Invalid YouTube URL! Please try again.");
+                resultArea.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
