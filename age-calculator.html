@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator - SuperTools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+    </nav>
+
+    <div class="tool-container">
+        <h1>📅 Age Calculator</h1>
+        <p>Enter your birth date below:</p>
+        
+        <input type="date" id="dob">
+        <button onclick="calculateAge()">Calculate Now</button>
+
+        <div id="result" style="margin-top: 20px; display: none;">
+            <h3>You are <span id="years">0</span> Years Old</h3>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <script>
+        function calculateAge() {
+            const dob = document.getElementById('dob').value;
+            if(!dob) return alert("Please enter date");
+            
+            const birthDate = new Date(dob);
+            const diff = new Date() - birthDate;
+            const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+            
+            document.getElementById('years').innerText = age;
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
