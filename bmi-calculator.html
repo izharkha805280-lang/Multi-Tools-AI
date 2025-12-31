@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator - SuperTools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+    </nav>
+
+    <div class="tool-container">
+        <h1>⚖️ BMI Calculator</h1>
+        <p>Check if you are Underweight, Normal, or Overweight.</p>
+        
+        <label style="display:block; text-align:left; margin-top:10px;">Weight (kg):</label>
+        <input type="number" id="weight" placeholder="Ex: 70">
+
+        <label style="display:block; text-align:left; margin-top:10px;">Height (cm):</label>
+        <input type="number" id="height" placeholder="Ex: 175">
+
+        <button onclick="calculateBMI()">Check BMI</button>
+
+        <div id="result" style="margin-top: 20px; display: none;">
+            <h3>Your BMI: <span id="bmi-value">0</span></h3>
+            <p id="bmi-status" style="font-weight:bold; color:#764ba2;"></p>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+
+            if (!weight || !height) {
+                alert("Please enter both weight and height!");
+                return;
+            }
+
+            // Formula: weight / (height in meters squared)
+            const bmi = (weight / ((height / 100) * (height / 100))).toFixed(1);
+            
+            let status = "";
+            if (bmi < 18.5) status = "Underweight 🍔";
+            else if (bmi < 24.9) status = "Normal Weight ✅";
+            else if (bmi < 29.9) status = "Overweight ⚠️";
+            else status = "Obese 🚨";
+
+            document.getElementById('bmi-value').innerText = bmi;
+            document.getElementById('bmi-status').innerText = status;
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
