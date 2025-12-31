@@ -58,45 +58,69 @@ body {
     padding: 60px 20px;
 }
 
-/* --- HOMEPAGE TOOLS GRID --- */
+/* --- UPDATED HOMEPAGE TOOLS GRID (Sleek Look) --- */
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    /* Cards ab thode compact honge */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
     padding: 0 5% 4rem 5%;
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
     width: 100%;
 }
 
 .tool-card {
     background: var(--card-bg);
-    padding: 35px 25px;
-    border-radius: 16px;
-    text-align: center;
+    padding: 25px 20px; /* Padding kam ki taaki card huge na lage */
+    border-radius: 12px; /* Thoda kam round */
+    text-align: left; /* Center ki jagah Left align jyada professional lagta hai */
     text-decoration: none;
     color: var(--text-color);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.03);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .tool-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(108, 99, 255, 0.12);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(108, 99, 255, 0.1);
     border-color: rgba(108, 99, 255, 0.3);
 }
 
+/* Icon Design Updated */
 .tool-icon {
-    font-size: 3rem;
-    display: block;
+    font-size: 2rem; /* Icon size 3rem se ghatakar 2rem kar di */
     margin-bottom: 15px;
+    background: rgba(108, 99, 255, 0.1); /* Icon ke piche halka purple circle */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Circle shape */
+    transition: 0.3s;
+}
+
+.tool-card:hover .tool-icon {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
 }
 
 .tool-title {
-    font-size: 1.3rem;
+    font-size: 1.1rem; /* Title thoda chhota aur crisp */
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
+}
+
+.tool-card p {
+    font-size: 0.85rem;
+    color: #718096;
+    line-height: 1.5;
 }
 
 /* --- INNER TOOL PAGES DESIGN (Ye missing tha!) --- */
