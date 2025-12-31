@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - SuperTools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+    </nav>
+
+    <div class="tool-container">
+        <h1>📱 QR Code Generator</h1>
+        <p>Convert any link or text into a QR Code.</p>
+        
+        <input type="text" id="qrText" placeholder="Enter text or URL (e.g., www.google.com)">
+        
+        <div id="imgBox" style="width: 200px; margin: 20px auto; overflow: hidden; display: none;">
+            <img src="" id="qrImage" style="width: 100%; border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        </div>
+
+        <button onclick="generateQR()">Generate QR Code</button>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 SuperTools. All rights reserved.</p>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+    <script>
+        // Tool Specific Logic
+        let imgBox = document.getElementById("imgBox");
+        let qrImage = document.getElementById("qrImage");
+        let qrText = document.getElementById("qrText");
+
+        function generateQR() {
+            if (qrText.value.length > 0) {
+                // Using free API for QR generation
+                qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrText.value;
+                imgBox.style.display = "block";
+                showSuccess("QR Code Generated Successfully!");
+            } else {
+                qrText.classList.add('error');
+                setTimeout(() => qrText.classList.remove('error'), 1000);
+                showError("Please enter some text or URL!");
+            }
+        }
+    </script>
+</body>
+</html>
