@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech (AI Voice) - SuperTools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+    </nav>
+
+    <div class="tool-container">
+        <h1>🗣️ Text to Speech</h1>
+        <p>Convert your text into natural sounding voice.</p>
+        
+        <textarea id="text-input" placeholder="Type anything here..." style="width: 100%; height: 150px; padding: 15px; border: 2px solid #eee; border-radius: 12px; resize: none; margin-top: 15px;"></textarea>
+        
+        <div style="margin: 15px 0;">
+            <label style="font-size: 0.9rem; font-weight: 600;">Select Voice:</label>
+            <select id="voice-select"></select>
+        </div>
+
+        <button onclick="speakText()">🔊 Listen Now</button>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 SuperTools. All rights reserved.</p>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+    <script>
+        let speech = new SpeechSynthesisUtterance();
+        let voices = [];
+        let voiceSelect = document.querySelector("#voice-select");
+
+        window.speechSynthesis.onvoiceschanged = () => {
+            voices = window.speechSynthesis.getVoices();
+            speech.voice = voices[0];
+
+            // Dropdown mein voices add karein
+            voices.forEach((voice, i) => (voiceSelect.options[i] = new Option(voice.name, i)));
+        };
+
+        voiceSelect.addEventListener("change", () => {
+            speech.voice = voices[voiceSelect.value];
+        });
+
+        function speakText() {
+            let text = document.querySelector("#text-input").value;
+            if(text.trim() === "") {
+                showError("Please write something first!");
+                return;
+            }
+            speech.text = text;
+            window.speechSynthesis.speak(speech);
+            showSuccess("Playing Audio...");
+        }
+    </script>
+</body>
+</html>
