@@ -157,3 +157,47 @@ footer a:hover {
         grid-template-columns: 1fr; /* Force single column on small mobile */
     }
 }
+/* --- Toast Notification (Error/Success Messages) --- */
+#toast-box {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 1000;
+}
+
+.toast {
+    width: 350px;
+    height: 60px;
+    background: #fff;
+    font-weight: 500;
+    margin: 10px 0;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    position: relative;
+    transform: translateX(100%);
+    animation: moveleft 0.5s linear forwards;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+@keyframes moveleft {
+    100% { transform: translateX(0); }
+}
+
+.toast i {
+    margin: 0 20px;
+    font-size: 25px;
+}
+
+.toast.error i { color: #ff3b3b; }
+.toast.success i { color: #2dce89; }
+.toast.error::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 5px; background: #ff3b3b; animation: anim 4s linear forwards; }
+.toast.success::after { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 5px; background: #2dce89; animation: anim 4s linear forwards; }
+
+@keyframes anim {
+    100% { width: 0; }
+}
