@@ -1,6 +1,6 @@
-// script.js - Error Handling System
+// script.js - Error Handling + Dark Mode
 
-// HTML mein Toast Box Container banata hai
+// --- PART 1: Error Toast System ---
 let toastBox = document.createElement('div');
 toastBox.id = 'toast-box';
 document.body.appendChild(toastBox);
@@ -30,25 +30,32 @@ function showError(msg) {
 function showSuccess(msg) {
     showToast(msg, 'success');
 }
-// --- Dark Mode Logic ---
 
+
+// --- PART 2: Dark Mode Logic ---
+
+// Hum check karenge ki kya button exist karta hai?
 const toggleBtn = document.getElementById("theme-toggle");
 
-// 1. Check Local Storage on Load (Refresh karne par yaad rakhe)
-if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-theme");
-    toggleBtn.innerText = "☀️"; // Agar dark hai to Sun dikhaye
-}
-
-// 2. Toggle Function
-toggleBtn.onclick = function() {
-    document.body.classList.toggle("dark-theme");
-    
-    if (document.body.classList.contains("dark-theme")) {
-        toggleBtn.innerText = "☀️"; // Switch to Sun icon
-        localStorage.setItem("theme", "dark"); // Save setting
-    } else {
-        toggleBtn.innerText = "🌙"; // Switch to Moon icon
-        localStorage.setItem("theme", "light"); // Save setting
+if (toggleBtn) {
+    // 1. Check Local Storage on Load
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-theme");
+        toggleBtn.innerText = "☀️";
     }
+
+    // 2. Toggle Function
+    toggleBtn.onclick = function() {
+        document.body.classList.toggle("dark-theme");
+        
+        if (document.body.classList.contains("dark-theme")) {
+            toggleBtn.innerText = "☀️";
+            localStorage.setItem("theme", "dark");
+        } else {
+            toggleBtn.innerText = "🌙";
+            localStorage.setItem("theme", "light");
+        }
+    }
+} else {
+    console.log("Theme Toggle Button not found on this page.");
 }
