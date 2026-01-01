@@ -59,3 +59,29 @@ if (toggleBtn) {
 } else {
     console.log("Theme Toggle Button not found on this page.");
 }
+// --- Cookie Consent Logic ---
+document.addEventListener("DOMContentLoaded", function() {
+    // Check karo agar user ne pehle accept kiya hai ya nahi
+    if (!localStorage.getItem("cookieAccepted")) {
+        
+        // Agar nahi kiya, to Banner banao
+        let banner = document.createElement("div");
+        banner.id = "cookie-banner";
+        banner.innerHTML = `
+            <p>🍪 We use cookies to ensure you get the best experience on our website.</p>
+            <button id="accept-cookie">Got it!</button>
+        `;
+        document.body.appendChild(banner);
+
+        // Animation se upar lao
+        setTimeout(() => {
+            banner.style.bottom = "0";
+        }, 1000);
+
+        // Button dabane par kya hoga
+        document.getElementById("accept-cookie").onclick = function() {
+            localStorage.setItem("cookieAccepted", "true"); // Yaad kar lo
+            banner.style.bottom = "-100px"; // Wapas chhupa do
+        };
+    }
+});
