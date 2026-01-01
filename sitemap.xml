@@ -31,3 +31,7 @@
       <priority>0.50</priority>
    </url>
 </urlset>
+<url>
+      <loc>https://multi-tools-ai.vercel.app/disclaimer.html</loc>
+      <priority>0.50</priority>
+   </url>
