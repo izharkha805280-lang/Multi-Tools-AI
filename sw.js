@@ -1,4 +1,4 @@
-const CACHE_NAME = "supertools-v1";
+const CACHE_NAME = "supertools-v2";
 const ASSETS = [
   "/",
   "/index.html",
