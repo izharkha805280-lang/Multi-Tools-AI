@@ -330,3 +330,37 @@ footer a:hover { color: var(--primary-color); }
 .facebook { background: #1877F2; box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3); }
 .twitter { background: #1DA1F2; box-shadow: 0 4px 10px rgba(29, 161, 242, 0.3); }
 .telegram { background: #0088cc; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3); }
+/* --- SEO Content Section --- */
+.seo-content {
+    max-width: 800px;
+    margin: 50px auto; /* Tool se door, center mein */
+    padding: 30px;
+    background: var(--card-bg); /* Theme ke hisaab se color */
+    border-radius: 16px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    text-align: left;
+}
+
+.seo-content h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.seo-content h3 {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.seo-content p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    color: #666; /* Light text taaki user ko disturb na kare */
+}
+
+/* Dark mode fix for text */
+.dark-theme .seo-content p {
+    color: #cbd5e0;
+}
