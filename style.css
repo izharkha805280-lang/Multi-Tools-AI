@@ -1,12 +1,28 @@
-/* Google Fonts Import */
+
+
+/* style.css - Updated for Dark Mode */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 :root {
+    /* Light Mode Colors (Default) */
     --primary-color: #6C63FF;
     --secondary-color: #ff6584;
     --bg-color: #f8f9fa;
     --text-color: #333;
     --card-bg: #ffffff;
+    --shadow-color: rgba(0,0,0,0.05);
+    --border-color: rgba(0,0,0,0.05);
+}
+
+/* Dark Mode Colors (Magic Class) */
+.dark-theme {
+    --primary-color: #818cf8; /* Thoda bright purple dark background ke liye */
+    --secondary-color: #ff6584;
+    --bg-color: #0f172a;      /* Deep Dark Blue/Black */
+    --text-color: #e2e8f0;    /* Light Gray Text */
+    --card-bg: #1e293b;       /* Dark Gray Cards */
+    --shadow-color: rgba(0,0,0,0.3);
+    --border-color: rgba(255,255,255,0.1);
 }
 
 * {
@@ -16,32 +32,51 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- BODY STYLES (Footer Fix) --- */
+/* Body Background Update */
 body {
     background-color: var(--bg-color);
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(108, 99, 255, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(255, 101, 132, 0.08) 0px, transparent 50%);
-    background-attachment: fixed;
+    /* Gradient ko thoda subtle kar diya taaki dark mode mein bura na lage */
+    transition: background 0.3s, color 0.3s; 
     color: var(--text-color);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-/* Navbar */
+/* Navbar Update */
 .navbar {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--card-bg); /* Ab ye theme ke hisaab se change hoga */
     backdrop-filter: blur(10px);
     padding: 1rem 5%;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 15px var(--shadow-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background 0.3s;
 }
+
+/* Theme Toggle Button Design */
+#theme-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 5px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    box-shadow: none; /* Button shadow hataya */
+    width: auto; /* Width auto rakhi */
+}
+#theme-toggle:hover {
+    transform: rotate(30deg) scale(1.1);
+    background: rgba(108, 99, 255, 0.1);
+}
+
+/* ... Baaki niche ka saara code same rahega ... */
+/* Bas jahan bhi 'background: white' likha ho, wahan 'background: var(--card-bg)' kar dena agar maine miss kiya ho */
 
 .logo {
     font-size: 1.5rem;
