@@ -287,3 +287,46 @@ footer a:hover { color: var(--primary-color); }
     .tool-container { padding: 25px; margin: 20px auto; }
     h1 { font-size: 1.5rem; }
         }
+/* --- Social Share Buttons --- */
+.share-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.share-section p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.share-btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: transform 0.3s;
+    border: none;
+}
+
+.share-btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Brand Colors */
+.whatsapp { background: #25D366; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+.facebook { background: #1877F2; box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3); }
+.twitter { background: #1DA1F2; box-shadow: 0 4px 10px rgba(29, 161, 242, 0.3); }
+.telegram { background: #0088cc; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3); }
