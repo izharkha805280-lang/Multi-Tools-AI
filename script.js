@@ -85,3 +85,25 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 });
+// --- Live Search Functionality ---
+const searchInput = document.getElementById('search-input');
+const toolCards = document.querySelectorAll('.tool-card');
+
+if (searchInput) {
+    searchInput.addEventListener('keyup', function(e) {
+        const term = e.target.value.toLowerCase();
+
+        toolCards.forEach(card => {
+            // Tool ka naam aur description padho
+            const title = card.querySelector('.tool-title').textContent.toLowerCase();
+            const desc = card.querySelector('p').textContent.toLowerCase();
+
+            // Agar match kare to dikhao, nahi to chupao
+            if (title.includes(term) || desc.includes(term)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+}
