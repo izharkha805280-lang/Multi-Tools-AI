@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural AI Text to Speech (HD) - SuperTools</title>
+    <title>AI Text to Speech (Dual Engine) - SuperTools</title>
     <link rel="stylesheet" href="style.css">
     
     <style>
@@ -19,7 +19,7 @@
         
         textarea {
             width: 100%;
-            height: 150px;
+            height: 120px;
             padding: 15px;
             border-radius: 12px;
             border: 2px solid #ddd;
@@ -28,28 +28,21 @@
             font-size: 1.1rem;
             resize: none;
             outline: none;
-            font-family: sans-serif;
         }
-        textarea:focus { border-color: var(--primary-color); }
-
-        label { font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; display: block; }
         
         select {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
             border: 1px solid #ddd;
-            background: var(--bg-color);
-            color: var(--text-color);
             margin-bottom: 20px;
             font-size: 1rem;
-            cursor: pointer;
         }
 
         .action-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #6C63FF 0%, #4834d4 100%);
+            background: #6C63FF;
             color: white;
             border: none;
             border-radius: 50px;
@@ -57,24 +50,31 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
         }
-        .action-btn:hover { transform: translateY(-2px); }
+        .action-btn:hover { background: #5a52d5; }
+        .action-btn:disabled { background: #ccc; }
 
-        #audio-player { width: 100%; margin-top: 25px; display: none; }
+        #status-msg {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #666;
+            min-height: 20px;
+        }
+
+        #audio-player { width: 100%; margin-top: 20px; display: none; }
         
         #download-btn {
             display: none;
             margin-top: 15px;
             text-align: center;
-            background: #00b894;
+            background: #28a745;
             color: white;
             padding: 14px;
             border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
         }
-        #download-btn:hover { background: #00a884; }
     </style>
 </head>
 <body>
@@ -85,57 +85,34 @@
     </nav>
 
     <div class="tool-container">
-        <h1>🎙️ Ultra HD Text to Speech</h1>
-        <p>Use Viral AI Voices like Aditi (Hindi) & Brian (English). No Noise. 100% Free.</p>
+        <h1>🎙️ AI Voice Generator</h1>
+        <p>Uses 2 Engines to ensure audio works 100%.</p>
 
         <div class="tts-container">
-            <textarea id="text-input" placeholder="Yahan kuch likhein... (Hindi ya English mein)"></textarea>
+            <textarea id="text-input" placeholder="Type something here..."></textarea>
 
-            <label>🗣️ Select Voice (Language & Gender)</label>
+            <label>🗣️ Select Voice</label>
             <select id="voice-select">
-                <optgroup label="🇮🇳 Hindi (India)">
-                    <option value="Aditi">👩 Aditi (Best Hindi Female)</option>
-                    <option value="Raveena">👩 Raveena (Soft Hindi)</option>
+                <optgroup label="🔥 High Quality (Engine 1)">
+                    <option value="Aditi">👩 Aditi (Hindi/Indian English)</option>
+                    <option value="Brian">👨 Brian (British English)</option>
+                    <option value="Salli">👩 Salli (US Female)</option>
+                    <option value="Matthew">👨 Matthew (US Male)</option>
                 </optgroup>
-
-                <optgroup label="🇺🇸 English (US)">
-                    <option value="Joey">👨 Joey (Deep Male)</option>
-                    <option value="Justin">👨 Justin (Young Male)</option>
-                    <option value="Salli">👩 Salli (Teen Female)</option>
-                    <option value="Joanna">👩 Joanna (Professional Female)</option>
-                    <option value="Ivy">👩 Ivy (Soft Child)</option>
-                </optgroup>
-                
-                <optgroup label="🇬🇧 English (UK)">
-                    <option value="Brian">👨 Brian (Famous British Voice)</option>
-                    <option value="Amy">👩 Amy (Soft British Female)</option>
-                    <option value="Emma">👩 Emma (Elegant Female)</option>
-                </optgroup>
-
-                <optgroup label="🌏 Other Languages">
-                    <option value="Penelope">🇪🇸 Spanish (Penelope)</option>
-                    <option value="Miguel">🇪🇸 Spanish (Miguel)</option>
-                    <option value="Celine">🇫🇷 French (Celine)</option>
-                    <option value="Hans">🇩🇪 German (Hans)</option>
-                    <option value="Takumi">🇯🇵 Japanese (Takumi)</option>
+                <optgroup label="🛡️ Backup (Engine 2)">
+                    <option value="google-hi">🇮🇳 Google Hindi</option>
+                    <option value="google-en">🇺🇸 Google English</option>
                 </optgroup>
             </select>
 
-            <button class="action-btn" onclick="generateAudio()">
-                ✨ Generate HD Audio
-            </button>
+            <button class="action-btn" onclick="generateAudio()">Generate Audio</button>
+            
+            <p id="status-msg"></p>
 
             <audio id="audio-player" controls></audio>
-            <a id="download-btn" href="#" download="SuperTools-Audio.mp3">⬇️ Download MP3</a>
+            <a id="download-btn" href="#" target="_blank">⬇️ Download Audio</a>
         </div>
-
-        <div class="share-section" style="margin-top: 30px;">
-             <h3>Share this Tool:</h3>
-             <div class="share-btn-container">
-                <a href="whatsapp://send?text=Best AI Voice Generator (Aditi Voice) 🔥 https://multi-tools-ai.vercel.app/text-to-speech.html" class="share-btn whatsapp">💬 WhatsApp</a>
-             </div>
-        </div>
-
+        
         <a href="index.html" class="back-btn">← Back to Home</a>
     </div>
 
@@ -146,35 +123,70 @@
             const text = document.getElementById('text-input').value.trim();
             const voice = document.getElementById('voice-select').value;
             const btn = document.querySelector('.action-btn');
+            const status = document.getElementById('status-msg');
             const player = document.getElementById('audio-player');
             const dlBtn = document.getElementById('download-btn');
 
             if (!text) {
-                alert("Please type some text first!");
+                alert("Please write some text!");
                 return;
             }
 
-            // Button Loading
-            btn.innerHTML = "⏳ Generating...";
+            // 1. Reset UI
             btn.disabled = true;
+            btn.innerHTML = "⏳ Connecting...";
+            status.innerHTML = "Connecting to Audio Server...";
+            status.style.color = "#666";
+            player.style.display = "none";
+            dlBtn.style.display = "none";
 
-            // StreamElements API URL (No Key Needed!)
-            const apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${encodeURIComponent(text)}`;
+            let apiUrl = "";
 
-            // Set Player
+            // 2. Select Engine based on Voice
+            if (voice.startsWith('google')) {
+                // Google Engine (Backup)
+                const lang = voice === 'google-hi' ? 'hi' : 'en';
+                apiUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=${lang}`;
+            } else {
+                // StreamElements Engine (High Quality)
+                apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${encodeURIComponent(text)}`;
+            }
+
+            // 3. Load Audio
             player.src = apiUrl;
-            player.style.display = "block";
-            
-            // Set Download
-            dlBtn.href = apiUrl;
-            dlBtn.style.display = "block";
+            player.load(); // Force load
 
-            // Play Audio
-            player.play().catch(e => console.log("Auto-play blocked, user needs to click play."));
+            // 4. Success Handler
+            player.onloadeddata = function() {
+                status.innerHTML = "✅ Audio Generated!";
+                status.style.color = "green";
+                player.style.display = "block";
+                player.play();
+                
+                dlBtn.href = apiUrl;
+                dlBtn.style.display = "block";
+                
+                btn.disabled = false;
+                btn.innerHTML = "Generate Audio";
+            };
 
-            // Reset Button
-            btn.innerHTML = "✨ Generate New Audio";
-            btn.disabled = false;
+            // 5. Error Handler (Agar fail hua to)
+            player.onerror = function() {
+                status.innerHTML = "❌ Server Busy. Trying Backup Engine...";
+                status.style.color = "red";
+                
+                // Backup Try (Google)
+                setTimeout(() => {
+                    const backupUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=en`;
+                    player.src = backupUrl;
+                    player.play();
+                    status.innerHTML = "⚠️ Using Backup Server (Standard Quality)";
+                    status.style.color = "orange";
+                    player.style.display = "block";
+                    btn.disabled = false;
+                    btn.innerHTML = "Generate Audio";
+                }, 1000);
+            };
         }
     </script>
 </body>
