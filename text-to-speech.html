@@ -3,65 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Text to Speech (Downloadable) - SuperTools</title>
+    <title>High Quality AI Voice Generator - SuperTools</title>
     <link rel="stylesheet" href="style.css">
     
     <style>
         .tts-container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
             text-align: left;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+        
+        /* Text Area Design */
         textarea {
             width: 100%;
-            height: 120px;
+            height: 140px;
             padding: 15px;
             border-radius: 12px;
             border: 2px solid #ddd;
             background: var(--bg-color);
             color: var(--text-color);
-            font-size: 1rem;
+            font-size: 1.1rem;
             resize: none;
             outline: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         textarea:focus { border-color: var(--primary-color); }
 
-        .settings-grid {
+        /* Grid for Controls */
+        .controls-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 20px;
+            margin-top: 20px;
         }
-        
-        label { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px; }
+
+        /* Labels & Inputs */
+        label { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 8px; color: var(--text-color); }
         
         select, input[type="range"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #ddd;
             background: var(--bg-color);
             color: var(--text-color);
+            cursor: pointer;
         }
 
+        /* Generate Button */
         .action-btn {
             width: 100%;
-            padding: 15px;
-            background: var(--primary-color);
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 50px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 25px;
             transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
         }
-        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .action-btn:hover { transform: translateY(-3px); }
         .action-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* Hidden Player & Download Button */
-        #audio-player { width: 100%; margin-top: 20px; display: none; }
+        /* Audio & Download */
+        #audio-player { width: 100%; margin-top: 25px; display: none; outline: none; }
         
         #download-btn {
             display: none;
@@ -69,12 +81,15 @@
             text-align: center;
             background: #28a745;
             color: white;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
         }
         #download-btn:hover { background: #218838; }
+
+        .note { font-size: 0.8rem; color: #888; margin-top: 5px; text-align: center; }
     </style>
 </head>
 <body>
@@ -85,45 +100,51 @@
     </nav>
 
     <div class="tool-container">
-        <h1>🗣️ AI Text to Speech</h1>
-        <p>Convert text to audio with Speed Control & Download MP3.</p>
+        <h1>🎙️ HD Text to Speech</h1>
+        <p>Generate lifelike audio in Male & Female voices. 48kHz Quality.</p>
 
         <div class="tts-container">
-            <textarea id="text-input" placeholder="Type something here to speak..."></textarea>
+            <textarea id="text-input" placeholder="Type text here (e.g., Hello, how are you today?)..."></textarea>
 
-            <div class="settings-grid">
+            <div class="controls-grid">
                 <div>
-                    <label>Language & Voice</label>
-                    <select id="language-select">
+                    <label>1. Select Language</label>
+                    <select id="language-select" onchange="updateVoices()">
                         <option value="en-us">🇺🇸 English (US)</option>
                         <option value="en-gb">🇬🇧 English (UK)</option>
-                        <option value="en-in">🇮🇳 English (India)</option>
                         <option value="hi-in">🇮🇳 Hindi (India)</option>
-                        <option value="fr-fr">🇫🇷 French</option>
                         <option value="es-es">🇪🇸 Spanish</option>
+                        <option value="fr-fr">🇫🇷 French</option>
                         <option value="de-de">🇩🇪 German</option>
                     </select>
                 </div>
                 <div>
-                    <label>Speed (Slow <-> Fast)</label>
+                    <label>2. Select Voice (Male/Female)</label>
+                    <select id="voice-select">
+                        </select>
+                </div>
+            </div>
+
+            <div class="controls-grid">
+                <div>
+                    <label>Speed (Slow 🐢 - Fast 🐇)</label>
                     <input type="range" id="speed-range" min="-3" max="3" value="0" step="1">
+                </div>
+                <div>
+                    <label>Audio Quality</label>
+                    <select disabled style="opacity: 0.7; cursor: not-allowed;">
+                        <option>🎧 48kHz (Studio Quality)</option>
+                    </select>
                 </div>
             </div>
 
             <button class="action-btn" onclick="generateSpeech()">
-                🔊 Generate Audio
+                ✨ Generate Audio
             </button>
 
             <audio id="audio-player" controls></audio>
-
-            <a id="download-btn" href="#" download="speech.mp3">⬇️ Download Audio MP3</a>
-        </div>
-
-        <div class="share-section" style="margin-top: 40px;">
-             <p>Share this tool:</p>
-             <div class="share-btn-container">
-                <a href="whatsapp://send?text=Convert Text to Audio & Download MP3 for Free! 🔥 https://multi-tools-ai.vercel.app/text-to-speech.html" class="share-btn whatsapp">💬</a>
-             </div>
+            
+            <a id="download-btn" href="#" download="speech.mp3">⬇️ Download High Quality MP3</a>
         </div>
 
         <a href="index.html" class="back-btn">← Back to Home</a>
@@ -132,47 +153,106 @@
     <script src="script.js"></script>
 
     <script>
-        // 🔴🔴 STEP 1: YAHAN APNI KEY PASTE KAREIN 🔴🔴
+        // 🔴🔴 APNI API KEY YAHAN DALEIN 🔴🔴
         const API_KEY = '49ed1261a3ad40318f929f07d985c0b1'; 
 
+        // --- Voice Data (Male/Female Names) ---
+        const voicesData = {
+            'en-us': [
+                { name: 'Mary', label: '👩 Mary (Female)' },
+                { name: 'Linda', label: '👩 Linda (Female)' },
+                { name: 'Mike', label: '👨 Mike (Male)' },
+                { name: 'John', label: '👨 John (Male)' }
+            ],
+            'en-gb': [
+                { name: 'Alice', label: '👩 Alice (Female)' },
+                { name: 'Nancy', label: '👩 Nancy (Female)' },
+                { name: 'Lily', label: '👩 Lily (Female)' },
+                { name: 'Harry', label: '👨 Harry (Male)' }
+            ],
+            'hi-in': [
+                { name: 'Puja', label: '👩 Puja (Female)' },
+                { name: 'Swara', label: '👩 Swara (Female)' },
+                { name: 'Kabir', label: '👨 Kabir (Male)' }
+            ],
+            'es-es': [
+                { name: 'Camila', label: '👩 Camila (Female)' },
+                { name: 'Sofia', label: '👩 Sofia (Female)' },
+                { name: 'Diego', label: '👨 Diego (Male)' }
+            ],
+            'fr-fr': [
+                { name: 'Bette', label: '👩 Bette (Female)' },
+                { name: 'Iva', label: '👩 Iva (Female)' },
+                { name: 'Martin', label: '👨 Martin (Male)' }
+            ],
+            'de-de': [
+                { name: 'Hanna', label: '👩 Hanna (Female)' },
+                { name: 'Lukas', label: '👨 Lukas (Male)' }
+            ]
+        };
+
+        // Populate Voices based on Language
+        function updateVoices() {
+            const lang = document.getElementById('language-select').value;
+            const voiceSelect = document.getElementById('voice-select');
+            const voices = voicesData[lang];
+
+            voiceSelect.innerHTML = ''; // Clear old options
+
+            voices.forEach(v => {
+                let option = document.createElement('option');
+                option.value = v.name;
+                option.innerText = v.label;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        // Initialize on load
+        window.onload = updateVoices;
+
+        // Generate Function
         function generateSpeech() {
             const text = document.getElementById('text-input').value.trim();
             const lang = document.getElementById('language-select').value;
+            const voiceName = document.getElementById('voice-select').value; // Get Specific Name
             const speed = document.getElementById('speed-range').value;
+            
             const btn = document.querySelector('.action-btn');
             const player = document.getElementById('audio-player');
             const dlBtn = document.getElementById('download-btn');
 
-            if (!text) { alert("Please type some text!"); return; }
-            if (API_KEY === 'YOUR_API_KEY_HERE') { alert("Please set your API Key in the code first!"); return; }
+            if (!text) { alert("Please type some text first!"); return; }
+            if (API_KEY === 'YOUR_API_KEY_HERE') { alert("API Key missing! Check Code."); return; }
 
-            // Loading state
-            btn.innerHTML = "⏳ Processing...";
+            btn.innerHTML = "⏳ Generating Studio Audio...";
             btn.disabled = true;
 
-            // API Request URL
-            // Format: 44khz 16bit Stereo MP3
-            const url = `https://api.voicerss.org/?key=${API_KEY}&hl=${lang}&src=${encodeURIComponent(text)}&r=${speed}&c=MP3&f=44khz_16bit_stereo`;
+            // API Logic:
+            // v = Voice Name (Mary, Mike, etc.)
+            // r = Speed
+            // f = 48khz_16bit_stereo (REMOVES NOISE) ✅
+            
+            const url = `https://api.voicerss.org/?key=${API_KEY}&hl=${lang}&v=${voiceName}&src=${encodeURIComponent(text)}&r=${speed}&c=MP3&f=48khz_16bit_stereo`;
 
-            // Set Player
             player.src = url;
             player.style.display = "block";
-            player.play();
-
-            // Set Download Link
-            dlBtn.href = url;
-            dlBtn.style.display = "block";
-
-            // Reset Button
-            player.onloadeddata = () => {
-                btn.innerHTML = "🔊 Generate New Audio";
+            
+            // Error Handling if voice fails
+            player.onerror = function() {
+                alert("Error loading audio. Try shorter text or a different voice.");
+                btn.innerHTML = "✨ Generate Audio";
                 btn.disabled = false;
             };
 
-            player.onerror = () => {
-                alert("Error! Check API Key or Internet connection.");
-                btn.innerHTML = "🔊 Generate Audio";
+            // Play when ready
+            player.onloadeddata = function() {
+                player.play();
+                btn.innerHTML = "✨ Generate New Audio";
                 btn.disabled = false;
+                
+                // Show Download Button
+                dlBtn.href = url;
+                dlBtn.style.display = "block";
             };
         }
     </script>
