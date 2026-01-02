@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High Quality AI Voice Generator - SuperTools</title>
+    <title>Neural AI Text to Speech (HD) - SuperTools</title>
     <link rel="stylesheet" href="style.css">
     
     <style>
         .tts-container {
-            max-width: 650px;
+            max-width: 700px;
             margin: 0 auto;
             text-align: left;
             background: var(--card-bg);
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        /* Text Area Design */
         textarea {
             width: 100%;
-            height: 140px;
+            height: 150px;
             padding: 15px;
             border-radius: 12px;
             border: 2px solid #ddd;
@@ -29,67 +28,53 @@
             font-size: 1.1rem;
             resize: none;
             outline: none;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: sans-serif;
         }
         textarea:focus { border-color: var(--primary-color); }
 
-        /* Grid for Controls */
-        .controls-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        /* Labels & Inputs */
-        label { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 8px; color: var(--text-color); }
+        label { font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; display: block; }
         
-        select, input[type="range"] {
+        select {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
             border: 1px solid #ddd;
             background: var(--bg-color);
             color: var(--text-color);
+            margin-bottom: 20px;
+            font-size: 1rem;
             cursor: pointer;
         }
 
-        /* Generate Button */
         .action-btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            background: linear-gradient(135deg, #6C63FF 0%, #4834d4 100%);
             color: white;
             border: none;
             border-radius: 50px;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 25px;
             transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
         }
-        .action-btn:hover { transform: translateY(-3px); }
-        .action-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .action-btn:hover { transform: translateY(-2px); }
 
-        /* Audio & Download */
-        #audio-player { width: 100%; margin-top: 25px; display: none; outline: none; }
+        #audio-player { width: 100%; margin-top: 25px; display: none; }
         
         #download-btn {
             display: none;
             margin-top: 15px;
             text-align: center;
-            background: #28a745;
+            background: #00b894;
             color: white;
             padding: 14px;
             border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
-            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
         }
-        #download-btn:hover { background: #218838; }
-
-        .note { font-size: 0.8rem; color: #888; margin-top: 5px; text-align: center; }
+        #download-btn:hover { background: #00a884; }
     </style>
 </head>
 <body>
@@ -100,51 +85,55 @@
     </nav>
 
     <div class="tool-container">
-        <h1>🎙️ HD Text to Speech</h1>
-        <p>Generate lifelike audio in Male & Female voices. 48kHz Quality.</p>
+        <h1>🎙️ Ultra HD Text to Speech</h1>
+        <p>Use Viral AI Voices like Aditi (Hindi) & Brian (English). No Noise. 100% Free.</p>
 
         <div class="tts-container">
-            <textarea id="text-input" placeholder="Type text here (e.g., Hello, how are you today?)..."></textarea>
+            <textarea id="text-input" placeholder="Yahan kuch likhein... (Hindi ya English mein)"></textarea>
 
-            <div class="controls-grid">
-                <div>
-                    <label>1. Select Language</label>
-                    <select id="language-select" onchange="updateVoices()">
-                        <option value="en-us">🇺🇸 English (US)</option>
-                        <option value="en-gb">🇬🇧 English (UK)</option>
-                        <option value="hi-in">🇮🇳 Hindi (India)</option>
-                        <option value="es-es">🇪🇸 Spanish</option>
-                        <option value="fr-fr">🇫🇷 French</option>
-                        <option value="de-de">🇩🇪 German</option>
-                    </select>
-                </div>
-                <div>
-                    <label>2. Select Voice (Male/Female)</label>
-                    <select id="voice-select">
-                        </select>
-                </div>
-            </div>
+            <label>🗣️ Select Voice (Language & Gender)</label>
+            <select id="voice-select">
+                <optgroup label="🇮🇳 Hindi (India)">
+                    <option value="Aditi">👩 Aditi (Best Hindi Female)</option>
+                    <option value="Raveena">👩 Raveena (Soft Hindi)</option>
+                </optgroup>
 
-            <div class="controls-grid">
-                <div>
-                    <label>Speed (Slow 🐢 - Fast 🐇)</label>
-                    <input type="range" id="speed-range" min="-3" max="3" value="0" step="1">
-                </div>
-                <div>
-                    <label>Audio Quality</label>
-                    <select disabled style="opacity: 0.7; cursor: not-allowed;">
-                        <option>🎧 48kHz (Studio Quality)</option>
-                    </select>
-                </div>
-            </div>
+                <optgroup label="🇺🇸 English (US)">
+                    <option value="Joey">👨 Joey (Deep Male)</option>
+                    <option value="Justin">👨 Justin (Young Male)</option>
+                    <option value="Salli">👩 Salli (Teen Female)</option>
+                    <option value="Joanna">👩 Joanna (Professional Female)</option>
+                    <option value="Ivy">👩 Ivy (Soft Child)</option>
+                </optgroup>
+                
+                <optgroup label="🇬🇧 English (UK)">
+                    <option value="Brian">👨 Brian (Famous British Voice)</option>
+                    <option value="Amy">👩 Amy (Soft British Female)</option>
+                    <option value="Emma">👩 Emma (Elegant Female)</option>
+                </optgroup>
 
-            <button class="action-btn" onclick="generateSpeech()">
-                ✨ Generate Audio
+                <optgroup label="🌏 Other Languages">
+                    <option value="Penelope">🇪🇸 Spanish (Penelope)</option>
+                    <option value="Miguel">🇪🇸 Spanish (Miguel)</option>
+                    <option value="Celine">🇫🇷 French (Celine)</option>
+                    <option value="Hans">🇩🇪 German (Hans)</option>
+                    <option value="Takumi">🇯🇵 Japanese (Takumi)</option>
+                </optgroup>
+            </select>
+
+            <button class="action-btn" onclick="generateAudio()">
+                ✨ Generate HD Audio
             </button>
 
             <audio id="audio-player" controls></audio>
-            
-            <a id="download-btn" href="#" download="speech.mp3">⬇️ Download High Quality MP3</a>
+            <a id="download-btn" href="#" download="SuperTools-Audio.mp3">⬇️ Download MP3</a>
+        </div>
+
+        <div class="share-section" style="margin-top: 30px;">
+             <h3>Share this Tool:</h3>
+             <div class="share-btn-container">
+                <a href="whatsapp://send?text=Best AI Voice Generator (Aditi Voice) 🔥 https://multi-tools-ai.vercel.app/text-to-speech.html" class="share-btn whatsapp">💬 WhatsApp</a>
+             </div>
         </div>
 
         <a href="index.html" class="back-btn">← Back to Home</a>
@@ -153,107 +142,39 @@
     <script src="script.js"></script>
 
     <script>
-        // 🔴🔴 APNI API KEY YAHAN DALEIN 🔴🔴
-        const API_KEY = '49ed1261a3ad40318f929f07d985c0b1'; 
-
-        // --- Voice Data (Male/Female Names) ---
-        const voicesData = {
-            'en-us': [
-                { name: 'Mary', label: '👩 Mary (Female)' },
-                { name: 'Linda', label: '👩 Linda (Female)' },
-                { name: 'Mike', label: '👨 Mike (Male)' },
-                { name: 'John', label: '👨 John (Male)' }
-            ],
-            'en-gb': [
-                { name: 'Alice', label: '👩 Alice (Female)' },
-                { name: 'Nancy', label: '👩 Nancy (Female)' },
-                { name: 'Lily', label: '👩 Lily (Female)' },
-                { name: 'Harry', label: '👨 Harry (Male)' }
-            ],
-            'hi-in': [
-                { name: 'Puja', label: '👩 Puja (Female)' },
-                { name: 'Swara', label: '👩 Swara (Female)' },
-                { name: 'Kabir', label: '👨 Kabir (Male)' }
-            ],
-            'es-es': [
-                { name: 'Camila', label: '👩 Camila (Female)' },
-                { name: 'Sofia', label: '👩 Sofia (Female)' },
-                { name: 'Diego', label: '👨 Diego (Male)' }
-            ],
-            'fr-fr': [
-                { name: 'Bette', label: '👩 Bette (Female)' },
-                { name: 'Iva', label: '👩 Iva (Female)' },
-                { name: 'Martin', label: '👨 Martin (Male)' }
-            ],
-            'de-de': [
-                { name: 'Hanna', label: '👩 Hanna (Female)' },
-                { name: 'Lukas', label: '👨 Lukas (Male)' }
-            ]
-        };
-
-        // Populate Voices based on Language
-        function updateVoices() {
-            const lang = document.getElementById('language-select').value;
-            const voiceSelect = document.getElementById('voice-select');
-            const voices = voicesData[lang];
-
-            voiceSelect.innerHTML = ''; // Clear old options
-
-            voices.forEach(v => {
-                let option = document.createElement('option');
-                option.value = v.name;
-                option.innerText = v.label;
-                voiceSelect.appendChild(option);
-            });
-        }
-
-        // Initialize on load
-        window.onload = updateVoices;
-
-        // Generate Function
-        function generateSpeech() {
+        function generateAudio() {
             const text = document.getElementById('text-input').value.trim();
-            const lang = document.getElementById('language-select').value;
-            const voiceName = document.getElementById('voice-select').value; // Get Specific Name
-            const speed = document.getElementById('speed-range').value;
-            
+            const voice = document.getElementById('voice-select').value;
             const btn = document.querySelector('.action-btn');
             const player = document.getElementById('audio-player');
             const dlBtn = document.getElementById('download-btn');
 
-            if (!text) { alert("Please type some text first!"); return; }
-            if (API_KEY === 'YOUR_API_KEY_HERE') { alert("API Key missing! Check Code."); return; }
+            if (!text) {
+                alert("Please type some text first!");
+                return;
+            }
 
-            btn.innerHTML = "⏳ Generating Studio Audio...";
+            // Button Loading
+            btn.innerHTML = "⏳ Generating...";
             btn.disabled = true;
 
-            // API Logic:
-            // v = Voice Name (Mary, Mike, etc.)
-            // r = Speed
-            // f = 48khz_16bit_stereo (REMOVES NOISE) ✅
-            
-            const url = `https://api.voicerss.org/?key=${API_KEY}&hl=${lang}&v=${voiceName}&src=${encodeURIComponent(text)}&r=${speed}&c=MP3&f=48khz_16bit_stereo`;
+            // StreamElements API URL (No Key Needed!)
+            const apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${encodeURIComponent(text)}`;
 
-            player.src = url;
+            // Set Player
+            player.src = apiUrl;
             player.style.display = "block";
             
-            // Error Handling if voice fails
-            player.onerror = function() {
-                alert("Error loading audio. Try shorter text or a different voice.");
-                btn.innerHTML = "✨ Generate Audio";
-                btn.disabled = false;
-            };
+            // Set Download
+            dlBtn.href = apiUrl;
+            dlBtn.style.display = "block";
 
-            // Play when ready
-            player.onloadeddata = function() {
-                player.play();
-                btn.innerHTML = "✨ Generate New Audio";
-                btn.disabled = false;
-                
-                // Show Download Button
-                dlBtn.href = url;
-                dlBtn.style.display = "block";
-            };
+            // Play Audio
+            player.play().catch(e => console.log("Auto-play blocked, user needs to click play."));
+
+            // Reset Button
+            btn.innerHTML = "✨ Generate New Audio";
+            btn.disabled = false;
         }
     </script>
 </body>
