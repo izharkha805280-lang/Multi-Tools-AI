@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word & Character Counter - SuperTools</title>
+    <meta name="description" content="Free online Word Counter. Count words, characters, sentences, and check reading time/speaking time for YouTube scripts.">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .counter-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .stat-number { font-size: 2rem; font-weight: bold; color: var(--primary-color); display: block; }
+        .stat-label { font-size: 0.9rem; color: var(--text-color); opacity: 0.8; }
+
+        /* Text Area */
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #ddd;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            font-family: sans-serif;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        textarea:focus { border-color: var(--primary-color); }
+
+        /* Time Estimates */
+        .time-estimates {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .time-tag { font-size: 0.9rem; font-weight: bold; color: #666; }
+        .time-tag span { color: var(--primary-color); }
+
+        /* Buttons */
+        .btn-group { margin-top: 15px; display: flex; gap: 10px; }
+        .tool-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .copy-btn { background: #28a745; color: white; }
+        .clear-btn { background: #ff4757; color: white; }
+        .tool-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+        <button id="theme-toggle">🌙</button>
+    </nav>
+
+    <div class="tool-container">
+        <h1>📝 Word Counter Pro</h1>
+        <p>Count Words, Characters & Estimate Reading Time.</p>
+
+        <div class="counter-container">
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span id="word-count" class="stat-number">0</span>
+                    <span class="stat-label">Words</span>
+                </div>
+                <div class="stat-box">
+                    <span id="char-count" class="stat-number">0</span>
+                    <span class="stat-label">Characters</span>
+                </div>
+                <div class="stat-box">
+                    <span id="sentence-count" class="stat-number">0</span>
+                    <span class="stat-label">Sentences</span>
+                </div>
+                <div class="stat-box">
+                    <span id="paragraph-count" class="stat-number">0</span>
+                    <span class="stat-label">Paragraphs</span>
+                </div>
+            </div>
+
+            <textarea id="text-input" placeholder="Start typing or paste your text here..."></textarea>
+
+            <div class="time-estimates">
+                <div class="time-tag">📖 Reading Time: <span id="read-time">0 min</span></div>
+                <div class="time-tag">🗣️ Speaking Time: <span id="speak-time">0 min</span></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="tool-btn copy-btn" onclick="copyText()">Copy Text</button>
+                <button class="tool-btn clear-btn" onclick="clearText()">Clear All</button>
+            </div>
+
+        </div>
+
+        <div class="related-tools" style="margin-top: 50px;">
+            <h3>🔥 You Might Also Like:</h3>
+            <div class="mini-tools-grid">
+                <a href="text-to-speech.html" class="mini-card"><span>🗣️</span><div>Text to Speech</div></a>
+                <a href="password-generator.html" class="mini-card"><span>🔐</span><div>Password Gen</div></a>
+                <a href="yt-thumbnail.html" class="mini-card"><span>📺</span><div>Thumbnail Downloader</div></a>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        const input = document.getElementById('text-input');
+        const wordEl = document.getElementById('word-count');
+        const charEl = document.getElementById('char-count');
+        const sentEl = document.getElementById('sentence-count');
+        const paraEl = document.getElementById('paragraph-count');
+        const readEl = document.getElementById('read-time');
+        const speakEl = document.getElementById('speak-time');
+
+        input.addEventListener('input', updateStats);
+
+        function updateStats() {
+            const text = input.value;
+            
+            // 1. Character Count
+            charEl.innerText = text.length;
+
+            // 2. Word Count (Remove empty spaces)
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            const wordCount = words.length;
+            wordEl.innerText = wordCount;
+
+            // 3. Sentence Count (Split by . ! ?)
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            sentEl.innerText = sentences.length;
+
+            // 4. Paragraph Count (Split by new lines)
+            const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
+            paraEl.innerText = paragraphs.length;
+
+            // 5. Time Estimates
+            // Avg reading speed: 200 wpm
+            const readTime = Math.ceil(wordCount / 200);
+            readEl.innerText = readTime + " min";
+
+            // Avg speaking speed: 130 wpm
+            const speakTime = Math.ceil(wordCount / 130);
+            speakEl.innerText = speakTime + " min";
+        }
+
+        function copyText() {
+            input.select();
+            document.execCommand("copy");
+            alert("Text Copied!");
+        }
+
+        function clearText() {
+            input.value = "";
+            updateStats();
+        }
+    </script>
+</body>
+</html>
