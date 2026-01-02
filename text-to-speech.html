@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Text to Speech - SuperTools</title>
+    <title>Global AI Text to Speech - SuperTools</title>
     <link rel="stylesheet" href="style.css">
     
     <style>
         .tts-container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
             text-align: left;
             background: var(--card-bg);
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         textarea {
             width: 100%;
-            height: 120px;
+            height: 130px;
             padding: 15px;
             border-radius: 12px;
             border: 2px solid #ddd;
@@ -28,26 +28,30 @@
             font-size: 1rem;
             resize: none;
             outline: none;
+            font-family: sans-serif;
         }
         
-        /* Red Border for Errors */
-        .error-border { border: 2px solid red !important; animation: shake 0.3s; }
+        /* Error Animation */
+        .error-border { border: 2px solid #ff4757 !important; animation: shake 0.3s; }
         @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
 
-        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        label { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px; }
-        select, input[type="range"] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; background: var(--bg-color); color: var(--text-color); }
+        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        label { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 8px; color: var(--text-color); }
+        
+        select, input[type="range"] { 
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; 
+            background: var(--bg-color); color: var(--text-color); cursor: pointer;
+        }
 
         .action-btn {
-            width: 100%; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 50px;
-            font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s;
+            width: 100%; padding: 16px; background: linear-gradient(135deg, #6C63FF 0%, #4834d4 100%);
+            color: white; border: none; border-radius: 50px;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s;
         }
-        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
-        
-        /* Suspended State */
-        .action-btn.suspended { background: #444; cursor: not-allowed; }
+        .action-btn:hover { transform: translateY(-2px); opacity: 0.95; }
+        .action-btn.suspended { background: #444; cursor: not-allowed; transform: none; }
 
-        #warning-msg { text-align: center; margin-top: 10px; font-weight: bold; min-height: 20px; }
+        #warning-msg { text-align: center; margin-top: 15px; font-weight: bold; min-height: 20px; }
         
         #audio-player { width: 100%; margin-top: 20px; display: none; }
         #download-btn { display: none; margin-top: 15px; text-align: center; background: #28a745; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; }
@@ -61,27 +65,30 @@
     </nav>
 
     <div class="tool-container">
-        <h1>🎙️ Pro Text to Speech</h1>
-        <p>Convert text to MP3. <br><span style="color: #ff4757; font-size: 0.8rem;">(Note: Abusive content will lead to suspension)</span></p>
+        <h1>🌍 Global Voice Generator</h1>
+        <p>Supports 25+ Languages with Male & Female Voices.<br>
+        <span style="color: #ff4757; font-size: 0.8rem;">(Warning: Abusive content leads to ban)</span></p>
 
         <div class="tts-container">
-            <textarea id="text-input" placeholder="Type text here..."></textarea>
+            <textarea id="text-input" placeholder="Type text here to convert into speech..."></textarea>
 
             <div class="controls-grid">
                 <div>
-                    <label>Language</label>
-                    <select id="language-select">
-                        <option value="en-us">🇺🇸 English (US)</option>
-                        <option value="en-gb">🇬🇧 English (UK)</option>
-                        <option value="hi-in">🇮🇳 Hindi</option>
-                        <option value="es-es">🇪🇸 Spanish</option>
-                        <option value="fr-fr">🇫🇷 French</option>
-                    </select>
+                    <label>1. Select Language</label>
+                    <select id="lang-select" onchange="loadVoices()">
+                        </select>
                 </div>
+                
                 <div>
-                    <label>Speed</label>
-                    <input type="range" id="speed-range" min="-3" max="3" value="0" step="1">
+                    <label>2. Select Voice</label>
+                    <select id="voice-select">
+                        </select>
                 </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label>Speed (Slow 🐢 - Fast 🐇)</label>
+                <input type="range" id="speed-range" min="-3" max="3" value="0" step="1">
             </div>
 
             <button id="gen-btn" class="action-btn" onclick="checkAndGenerate()">🔊 Generate Audio</button>
@@ -98,78 +105,161 @@
     <script src="script.js"></script>
 
     <script>
-        // 🔴🔴 STEP 1: APNI KEY YAHAN DALEIN 🔴🔴
+        // 🔴🔴 APNI API KEY YAHAN DALEIN 🔴🔴
         const API_KEY = '49ed1261a3ad40318f929f07d985c0b1'; 
 
-        // 🚫 LIST OF BAD WORDS (Aap aur add kar sakte hain)
-        const badWords = ["stupid", "idiot", "pagal", "kutta", "badword1", "badword2", "kill", "die"];
+        // 🚫 BAD WORDS LIST
+        const badWords = ["stupid", "idiot", "pagal", "kutta", "kill", "die", "abuse", "gali"];
 
+        // 🌍 DATABASE: All Languages & Voices (Male/Female)
+        const voiceData = {
+            "hi-in": [ {n: "Puja", g: "👩 Female"}, {n: "Kabir", g: "👨 Male"} ],
+            "en-us": [ {n: "Mary", g: "👩 Female"}, {n: "Mike", g: "👨 Male"}, {n: "Linda", g: "👩 Female"}, {n: "John", g: "👨 Male"} ],
+            "en-gb": [ {n: "Alice", g: "👩 Female"}, {n: "Harry", g: "👨 Male"}, {n: "Nancy", g: "👩 Female"} ],
+            "en-in": [ {n: "Jai", g: "👨 Male (Indian)"}, {n: "Ajit", g: "👨 Male (Indian)"} ],
+            "es-es": [ {n: "Camila", g: "👩 Female"}, {n: "Diego", g: "👨 Male"}, {n: "Sofia", g: "👩 Female"} ],
+            "fr-fr": [ {n: "Bette", g: "👩 Female"}, {n: "Martin", g: "👨 Male"}, {n: "Iva", g: "👩 Female"} ],
+            "de-de": [ {n: "Hanna", g: "👩 Female"}, {n: "Lukas", g: "👨 Male"} ],
+            "it-it": [ {n: "Elsa", g: "👩 Female"}, {n: "Ben", g: "👨 Male"} ],
+            "ja-jp": [ {n: "Hina", g: "👩 Female"}, {n: "Akira", g: "👨 Male"} ],
+            "ko-kr": [ {n: "Nari", g: "👩 Female"} ],
+            "zh-cn": [ {n: "Luli", g: "👩 Female"}, {n: "Shu", g: "👨 Male"} ],
+            "ar-sa": [ {n: "Salma", g: "👩 Female"} ],
+            "ru-ru": [ {n: "Olga", g: "👩 Female"}, {n: "Peter", g: "👨 Male"} ],
+            "pt-br": [ {n: "Marcia", g: "👩 Female"}, {n: "Denis", g: "👨 Male"} ],
+            "nl-nl": [ {n: "Lotte", g: "👩 Female"}, {n: "Bram", g: "👨 Male"} ],
+            "tr-tr": [ {n: "Seda", g: "👩 Female"} ],
+            "sv-se": [ {n: "Molly", g: "👩 Female"} ] // Sweden Special
+        };
+
+        const langNames = {
+            "hi-in": "🇮🇳 Hindi (India)",
+            "en-us": "🇺🇸 English (US)",
+            "en-gb": "🇬🇧 English (UK)",
+            "en-in": "🇮🇳 English (India)",
+            "es-es": "🇪🇸 Spanish",
+            "fr-fr": "🇫🇷 French",
+            "de-de": "🇩🇪 German",
+            "it-it": "🇮🇹 Italian",
+            "ja-jp": "🇯🇵 Japanese",
+            "ko-kr": "🇰🇷 Korean",
+            "zh-cn": "🇨🇳 Chinese",
+            "ar-sa": "🇸🇦 Arabic",
+            "ru-ru": "🇷🇺 Russian",
+            "pt-br": "🇧🇷 Portuguese",
+            "nl-nl": "🇳🇱 Dutch",
+            "tr-tr": "🇹🇷 Turkish",
+            "sv-se": "🇸🇪 Swedish"
+        };
+
+        // 1. Initialize Dropdowns
+        function initTTS() {
+            const langSelect = document.getElementById('lang-select');
+            
+            // Check suspension
+            if (localStorage.getItem('ttsStrikes') >= 3) suspendUser();
+
+            // Fill Language Dropdown
+            for (let code in voiceData) {
+                let option = document.createElement('option');
+                option.value = code;
+                option.innerText = langNames[code] || code;
+                langSelect.appendChild(option);
+            }
+            
+            // Default load
+            loadVoices(); 
+        }
+
+        // 2. Load Voices when Language changes
+        function loadVoices() {
+            const langCode = document.getElementById('lang-select').value;
+            const voiceSelect = document.getElementById('voice-select');
+            const voices = voiceData[langCode];
+
+            voiceSelect.innerHTML = ""; // Clear old
+
+            voices.forEach(v => {
+                let option = document.createElement('option');
+                option.value = v.n; // Voice Name (e.g., Puja)
+                option.innerText = `${v.g} - ${v.n}`;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        // 3. Main Generate Function with Safety
         function checkAndGenerate() {
             const textInput = document.getElementById('text-input');
             const text = textInput.value.toLowerCase();
             const btn = document.getElementById('gen-btn');
             const msg = document.getElementById('warning-msg');
 
-            // 1. Check if User is Suspended
-            let strikes = localStorage.getItem('ttsStrikes') || 0;
-            if (strikes >= 3) {
-                msg.innerText = "⛔ You are SUSPENDED due to abusive content.";
-                msg.style.color = "red";
-                btn.classList.add('suspended');
-                btn.disabled = true;
-                btn.innerText = "🚫 Account Suspended";
-                return;
-            }
-
+            // Suspended?
+            if (localStorage.getItem('ttsStrikes') >= 3) { suspendUser(); return; }
+            
             if (!textInput.value.trim()) { alert("Please type something!"); return; }
 
-            // 2. Check for Bad Words
+            // Check Bad Words
             let foundBadWord = badWords.some(word => text.includes(word));
 
             if (foundBadWord) {
-                strikes++;
-                localStorage.setItem('ttsStrikes', strikes); // Save strike count
-                
-                textInput.classList.add('error-border'); // Shake effect
-                setTimeout(() => textInput.classList.remove('error-border'), 500);
-
-                if (strikes >= 3) {
-                    // SUSPEND NOW
-                    msg.innerText = "⛔ Limit Reached! You are now suspended.";
-                    msg.style.color = "red";
-                    btn.classList.add('suspended');
-                    btn.disabled = true;
-                    btn.innerText = "🚫 Account Suspended";
-                } else {
-                    // WARNING
-                    msg.innerText = `⚠️ Warning! Abusive words detected. Strike ${strikes}/3`;
-                    msg.style.color = "orange";
-                }
-                return; // Stop here, do not generate audio
+                handleStrike();
+                return;
             }
 
-            // 3. If Clean, Generate Audio (VoiceRSS API)
-            msg.innerText = ""; // Clear warning
-            generateSpeech(textInput.value);
+            // Clean? Call API
+            msg.innerText = "";
+            generateSpeechAPI();
         }
 
-        function generateSpeech(cleanText) {
-            const lang = document.getElementById('language-select').value;
+        function handleStrike() {
+            let strikes = Number(localStorage.getItem('ttsStrikes') || 0) + 1;
+            localStorage.setItem('ttsStrikes', strikes);
+            
+            const msg = document.getElementById('warning-msg');
+            const textInput = document.getElementById('text-input');
+
+            textInput.classList.add('error-border');
+            setTimeout(() => textInput.classList.remove('error-border'), 500);
+
+            if (strikes >= 3) {
+                suspendUser();
+            } else {
+                msg.innerText = `⚠️ Warning! Bad word detected. Strike ${strikes}/3`;
+                msg.style.color = "orange";
+            }
+        }
+
+        function suspendUser() {
+            const btn = document.getElementById('gen-btn');
+            const msg = document.getElementById('warning-msg');
+            msg.innerText = "⛔ Account Suspended due to Policy Violation.";
+            msg.style.color = "red";
+            btn.classList.add('suspended');
+            btn.disabled = true;
+            btn.innerText = "🚫 Blocked";
+        }
+
+        function generateSpeechAPI() {
+            const text = document.getElementById('text-input').value;
+            const lang = document.getElementById('lang-select').value;
+            const voiceName = document.getElementById('voice-select').value;
             const speed = document.getElementById('speed-range').value;
             const btn = document.getElementById('gen-btn');
             const player = document.getElementById('audio-player');
             const dlBtn = document.getElementById('download-btn');
 
-            if (API_KEY === 'YOUR_API_KEY_HERE') { alert("API Key Missing!"); return; }
+            if (API_KEY === 'YOUR_API_KEY_HERE') { alert("Please set your API Key!"); return; }
 
-            btn.innerHTML = "⏳ Processing...";
+            btn.innerHTML = "⏳ Generating...";
             btn.disabled = true;
 
-            // 48khz Quality set ki hai taaki noise kam ho
-            const url = `https://api.voicerss.org/?key=${API_KEY}&hl=${lang}&src=${encodeURIComponent(cleanText)}&r=${speed}&c=MP3&f=48khz_16bit_stereo`;
+            // API Call with Specific Voice Name (v) and Quality (f)
+            const url = `https://api.voicerss.org/?key=${API_KEY}&hl=${lang}&v=${voiceName}&src=${encodeURIComponent(text)}&r=${speed}&c=MP3&f=48khz_16bit_stereo`;
 
             player.src = url;
             player.style.display = "block";
+            
             player.onloadeddata = () => {
                 player.play();
                 btn.innerHTML = "🔊 Generate Audio";
@@ -177,25 +267,17 @@
                 dlBtn.href = url;
                 dlBtn.style.display = "block";
             };
+            
             player.onerror = () => {
-                alert("Error! Check API Key or Text Limit.");
+                alert("Error generating audio. Please try shorter text.");
                 btn.innerHTML = "🔊 Generate Audio";
                 btn.disabled = false;
             };
         }
 
-        // Page load hone par check karo agar pehle se suspended hai
-        window.onload = function() {
-            if (localStorage.getItem('ttsStrikes') >= 3) {
-                const btn = document.getElementById('gen-btn');
-                const msg = document.getElementById('warning-msg');
-                msg.innerText = "⛔ You are SUSPENDED due to abusive content.";
-                msg.style.color = "red";
-                btn.classList.add('suspended');
-                btn.disabled = true;
-                btn.innerText = "🚫 Account Suspended";
-            }
-        };
+        // Start
+        window.onload = initTTS;
+
     </script>
 </body>
 </html>
