@@ -1,127 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-669P9VFN05"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-669P9VFN05');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text to Speech (AI Voice) - SuperTools</title>
+    <title>Pro Text to Speech (Downloadable) - SuperTools</title>
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .tts-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+        }
+        textarea:focus { border-color: var(--primary-color); }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        label { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px; }
+        
+        select, input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .action-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Hidden Player & Download Button */
+        #audio-player { width: 100%; margin-top: 20px; display: none; }
+        
+        #download-btn {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #download-btn:hover { background: #218838; }
+    </style>
 </head>
 <body>
 
     <nav class="navbar">
         <a href="index.html" class="logo">SuperTools.</a>
-        
         <button id="theme-toggle">🌙</button>
     </nav>
 
     <div class="tool-container">
-        <h1>🗣️ Text to Speech</h1>
-        <p>Convert your text into natural sounding voice.</p>
-        
-        <textarea id="text-input" placeholder="Type anything here..." style="width: 100%; height: 150px; padding: 15px; border: 2px solid #eee; border-radius: 12px; resize: none; margin-top: 15px;"></textarea>
-        
-        <div style="margin: 15px 0;">
-            <label style="font-size: 0.9rem; font-weight: 600;">Select Voice:</label>
-            <select id="voice-select"></select>
+        <h1>🗣️ AI Text to Speech</h1>
+        <p>Convert text to audio with Speed Control & Download MP3.</p>
+
+        <div class="tts-container">
+            <textarea id="text-input" placeholder="Type something here to speak..."></textarea>
+
+            <div class="settings-grid">
+                <div>
+                    <label>Language & Voice</label>
+                    <select id="language-select">
+                        <option value="en-us">🇺🇸 English (US)</option>
+                        <option value="en-gb">🇬🇧 English (UK)</option>
+                        <option value="en-in">🇮🇳 English (India)</option>
+                        <option value="hi-in">🇮🇳 Hindi (India)</option>
+                        <option value="fr-fr">🇫🇷 French</option>
+                        <option value="es-es">🇪🇸 Spanish</option>
+                        <option value="de-de">🇩🇪 German</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Speed (Slow <-> Fast)</label>
+                    <input type="range" id="speed-range" min="-3" max="3" value="0" step="1">
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="generateSpeech()">
+                🔊 Generate Audio
+            </button>
+
+            <audio id="audio-player" controls></audio>
+
+            <a id="download-btn" href="#" download="speech.mp3">⬇️ Download Audio MP3</a>
         </div>
 
-        <button onclick="speakText()">🔊 Listen Now</button>
-<div class="share-section">
-            <p>Share this tool with friends:</p>
-            <div class="share-btn-container">
-                <a href="whatsapp://send?text=Check out this amazing free tool! 🔥 https://multi-tools-ai.vercel.app" class="share-btn whatsapp" target="_blank">
-                    💬
-                </a>
-                
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://multi-tools-ai.vercel.app" class="share-btn facebook" target="_blank">
-                    f
-                </a>
-
-                <a href="https://t.me/share/url?url=https://multi-tools-ai.vercel.app&text=Useful Free Tool!" class="share-btn telegram" target="_blank">
-                    ✈️
-                </a>
-            </div>
-</div>
-        <div class="related-tools">
-            <h3>🔥 You Might Also Like:</h3>
-            <div class="mini-tools-grid">
-                
-                <a href="yt-thumbnail.html" class="mini-card">
-                    <span>📺</span>
-                    <div>Thumbnail Downloader</div>
-                </a>
-
-                <a href="qr-generator.html" class="mini-card">
-                    <span>📱</span>
-                    <div>QR Code Maker</div>
-                </a>
-
-                <a href="text-to-speech.html" class="mini-card">
-                    <span>🗣️</span>
-                    <div>Text to Speech</div>
-                </a>
-
-            </div>
+        <div class="share-section" style="margin-top: 40px;">
+             <p>Share this tool:</p>
+             <div class="share-btn-container">
+                <a href="whatsapp://send?text=Convert Text to Audio & Download MP3 for Free! 🔥 https://multi-tools-ai.vercel.app/text-to-speech.html" class="share-btn whatsapp">💬</a>
+             </div>
         </div>
+
         <a href="index.html" class="back-btn">← Back to Home</a>
     </div>
-
-    <footer>
-        <p>&copy; 2025 SuperTools. All rights reserved.</p>
-        <div>
-            <a href="index.html">Home</a>
-            <a href="contact.html">Contact Us</a>
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="disclaimer.html">Disclaimer</a>
-        </div>
-        <div class="seo-content">
-    <h2>Convert Text to Natural Sounding Voice</h2>
-    <p>Turn any written content into spoken audio with our <strong>Free Text-to-Speech (TTS) Converter</strong>. Whether you are a student listening to notes or a video creator needing a voiceover, this tool is perfect for you.</p>
-    
-    <h3>Key Benefits:</h3>
-    <p>🎙️ <strong>Multiple Voices:</strong> Choose from various accents and gender options provided by your browser.</p>
-    <p>📚 <strong>Accessibility:</strong> Great for people with reading difficulties or visual impairments.</p>
-    <p>⚡ <strong>Instant Playback:</strong> No waiting time. The AI generates audio in real-time right in your browser.</p>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 
     <script>
-        let speech = new SpeechSynthesisUtterance();
-        let voices = [];
-        let voiceSelect = document.querySelector("#voice-select");
+        // 🔴🔴 STEP 1: YAHAN APNI KEY PASTE KAREIN 🔴🔴
+        const API_KEY = 'YOUR_API_KEY_HERE'; 
 
-        window.speechSynthesis.onvoiceschanged = () => {
-            voices = window.speechSynthesis.getVoices();
-            speech.voice = voices[0];
+        function generateSpeech() {
+            const text = document.getElementById('text-input').value.trim();
+            const lang = document.getElementById('language-select').value;
+            const speed = document.getElementById('speed-range').value;
+            const btn = document.querySelector('.action-btn');
+            const player = document.getElementById('audio-player');
+            const dlBtn = document.getElementById('download-btn');
 
-            // Dropdown mein voices add karein
-            voices.forEach((voice, i) => (voiceSelect.options[i] = new Option(voice.name, i)));
-        };
+            if (!text) { alert("Please type some text!"); return; }
+            if (API_KEY === 'YOUR_API_KEY_HERE') { alert("Please set your API Key in the code first!"); return; }
 
-        voiceSelect.addEventListener("change", () => {
-            speech.voice = voices[voiceSelect.value];
-        });
+            // Loading state
+            btn.innerHTML = "⏳ Processing...";
+            btn.disabled = true;
 
-        function speakText() {
-            let text = document.querySelector("#text-input").value;
-            if(text.trim() === "") {
-                showError("Please write something first!");
-                return;
-            }
-            speech.text = text;
-            window.speechSynthesis.speak(speech);
-            showSuccess("Playing Audio...");
+            // API Request URL
+            // Format: 44khz 16bit Stereo MP3
+            const url = `https://api.voicerss.org/?key=${API_KEY}&hl=${lang}&src=${encodeURIComponent(text)}&r=${speed}&c=MP3&f=44khz_16bit_stereo`;
+
+            // Set Player
+            player.src = url;
+            player.style.display = "block";
+            player.play();
+
+            // Set Download Link
+            dlBtn.href = url;
+            dlBtn.style.display = "block";
+
+            // Reset Button
+            player.onloadeddata = () => {
+                btn.innerHTML = "🔊 Generate New Audio";
+                btn.disabled = false;
+            };
+
+            player.onerror = () => {
+                alert("Error! Check API Key or Internet connection.");
+                btn.innerHTML = "🔊 Generate Audio";
+                btn.disabled = false;
+            };
         }
     </script>
 </body>
