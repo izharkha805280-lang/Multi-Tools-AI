@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free QR Code Generator (Color & Logo) - SuperTools</title>
-    <meta name="description" content="Create custom QR Codes with colors. Free online QR Code Maker for links, text, and Wi-Fi. Download in HD.">
-    
+    <title>HD QR Code Generator (Scannable) - SuperTools</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -20,9 +18,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { font-weight: bold; display: block; margin-bottom: 8px; }
-        
         input[type="text"] {
             width: 100%;
             padding: 15px;
@@ -31,6 +26,7 @@
             background: var(--bg-color);
             color: var(--text-color);
             outline: none;
+            margin-bottom: 20px;
         }
 
         .settings-grid {
@@ -41,47 +37,40 @@
             text-align: left;
         }
 
-        input[type="color"] {
-            width: 100%;
-            height: 50px;
-            border: none;
-            cursor: pointer;
-            background: none;
-        }
+        .input-group label { font-weight: bold; display: block; margin-bottom: 5px; }
+        input[type="color"] { width: 100%; height: 50px; border: none; cursor: pointer; }
 
         .qr-preview {
             margin-top: 30px;
             padding: 20px;
-            background: white; /* QR needs white bg usually */
+            background: white; /* Visual Only */
             display: inline-block;
             border-radius: 10px;
-            border: 1px solid #ddd;
+            border: 4px solid #eee;
         }
 
-        /* Generate Button */
+        /* Tips Box */
+        .tips {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: none; /* Hidden by default */
+        }
+
         .gen-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #6C63FF 0%, #4834d4 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+            width: 100%; padding: 15px; background: var(--primary-color);
+            color: white; border: none; border-radius: 50px;
+            font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
         .gen-btn:hover { transform: translateY(-2px); }
 
         .download-btn {
-            display: none;
-            margin-top: 20px;
-            background: #28a745;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
+            display: none; margin-top: 20px; background: #28a745;
+            color: white; padding: 12px 30px; border-radius: 8px;
+            text-decoration: none; font-weight: bold;
         }
     </style>
 </head>
@@ -93,23 +82,24 @@
     </nav>
 
     <div class="tool-container">
-        <h1>📱 Custom QR Code Maker</h1>
-        <p>Generate colorful QR codes for your Links, Text, or Wi-Fi.</p>
+        <h1>📱 Pro QR Code Maker</h1>
+        <p>Create 100% Scannable QR Codes.</p>
 
         <div class="qr-container">
             
-            <div class="input-group">
-                <label>Paste Link or Text</label>
-                <input type="text" id="qr-text" placeholder="e.g. https://instagram.com/yourname">
+            <div id="color-warning" class="tips">
+                ⚠️ <b>Tip:</b> Keep the QR Color DARK and Background LIGHT. Inverted colors may not scan.
             </div>
+
+            <input type="text" id="qr-text" placeholder="Enter Link (e.g. https://google.com) or Text">
 
             <div class="settings-grid">
                 <div class="input-group">
-                    <label>QR Color</label>
+                    <label>QR Dots (Dark Color)</label>
                     <input type="color" id="dark-color" value="#000000">
                 </div>
                 <div class="input-group">
-                    <label>Background Color</label>
+                    <label>Background (Light Color)</label>
                     <input type="color" id="light-color" value="#ffffff">
                 </div>
             </div>
@@ -118,17 +108,8 @@
 
             <div id="qr-code" class="qr-preview"></div>
             <br>
-            <a id="download-link" class="download-btn" download="qrcode.png">⬇️ Download Image</a>
+            <a id="download-link" class="download-btn" onclick="downloadWithPadding(this)">⬇️ Download HD Image</a>
 
-        </div>
-
-        <div class="related-tools" style="margin-top: 50px;">
-            <h3>🔥 You Might Also Like:</h3>
-            <div class="mini-tools-grid">
-                <a href="password-generator.html" class="mini-card"><span>🔐</span><div>Password Gen</div></a>
-                <a href="image-compressor.html" class="mini-card"><span>📉</span><div>Image Compressor</div></a>
-                <a href="word-counter.html" class="mini-card"><span>📝</span><div>Word Counter</div></a>
-            </div>
         </div>
 
         <a href="index.html" class="back-btn">← Back to Home</a>
@@ -139,39 +120,68 @@
     <script>
         const qrBox = document.getElementById("qr-code");
         const downloadLink = document.getElementById("download-link");
+        const warningBox = document.getElementById("color-warning");
 
         function generateQR() {
             const text = document.getElementById("qr-text").value;
             const colorDark = document.getElementById("dark-color").value;
             const colorLight = document.getElementById("light-color").value;
 
-            if (!text) {
-                alert("Please enter some text or link!");
-                return;
+            if (!text) { alert("Please enter text!"); return; }
+
+            // 1. Color Warning Logic (Simple check)
+            // Agar Background Black (#000000) hai, toh warning dikhao
+            if (colorLight === "#000000" || colorLight < "#333333") {
+                warningBox.style.display = "block";
+            } else {
+                warningBox.style.display = "none";
             }
 
-            // Clear previous QR
+            // 2. Clear Old QR
             qrBox.innerHTML = "";
 
-            // Create new QR
-            const qrcode = new QRCode(qrBox, {
+            // 3. Generate New QR (High Quality)
+            // Width 300 tak badhaya taki clear dikhe
+            new QRCode(qrBox, {
                 text: text,
-                width: 250,
-                height: 250,
+                width: 300,
+                height: 300,
                 colorDark: colorDark,
                 colorLight: colorLight,
                 correctLevel: QRCode.CorrectLevel.H
             });
 
-            // Show Download Button after a small delay (to let canvas render)
+            // 4. Show Download Button
             setTimeout(() => {
-                const canvas = qrBox.querySelector("canvas");
-                if(canvas) {
-                    const imgUrl = canvas.toDataURL("image/png");
-                    downloadLink.href = imgUrl;
-                    downloadLink.style.display = "inline-block";
-                }
-            }, 500);
+                downloadLink.style.display = "inline-block";
+            }, 300);
+        }
+
+        // --- SPECIAL DOWNLOAD FUNCTION ---
+        // Yeh function QR ke aas-paas "White Border" jodta hai taaki scan ho sake
+        function downloadWithPadding(link) {
+            const canvas = qrBox.querySelector("canvas");
+            if (!canvas) return;
+
+            // Naya Canvas banao jo thoda bada ho (Padding ke liye)
+            const padding = 20;
+            const newCanvas = document.createElement("canvas");
+            newCanvas.width = canvas.width + (padding * 2);
+            newCanvas.height = canvas.height + (padding * 2);
+            
+            const ctx = newCanvas.getContext("2d");
+
+            // 1. Poora background white/light color se bhar do
+            const bgColor = document.getElementById("light-color").value;
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+
+            // 2. Beech mein QR Code chipka do
+            ctx.drawImage(canvas, padding, padding);
+
+            // 3. Download trigger karo
+            link.href = newCanvas.toDataURL("image/png");
+            link.download = "supertools-qr.png";
         }
     </script>
 </body>
