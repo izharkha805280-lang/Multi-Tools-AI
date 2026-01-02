@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Text to Speech (Dual Engine) - SuperTools</title>
+    <title>Secure Text to Speech - SuperTools</title>
     <link rel="stylesheet" href="style.css">
     
     <style>
         .tts-container {
-            max-width: 700px;
+            max-width: 600px;
             margin: 0 auto;
             text-align: left;
             background: var(--card-bg);
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
@@ -25,56 +25,32 @@
             border: 2px solid #ddd;
             background: var(--bg-color);
             color: var(--text-color);
-            font-size: 1.1rem;
+            font-size: 1rem;
             resize: none;
             outline: none;
         }
         
-        select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
+        /* Red Border for Errors */
+        .error-border { border: 2px solid red !important; animation: shake 0.3s; }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
+
+        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        label { font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px; }
+        select, input[type="range"] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; background: var(--bg-color); color: var(--text-color); }
 
         .action-btn {
-            width: 100%;
-            padding: 15px;
-            background: #6C63FF;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+            width: 100%; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 50px;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s;
         }
-        .action-btn:hover { background: #5a52d5; }
-        .action-btn:disabled { background: #ccc; }
-
-        #status-msg {
-            text-align: center;
-            margin-top: 10px;
-            font-weight: bold;
-            color: #666;
-            min-height: 20px;
-        }
-
-        #audio-player { width: 100%; margin-top: 20px; display: none; }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
         
-        #download-btn {
-            display: none;
-            margin-top: 15px;
-            text-align: center;
-            background: #28a745;
-            color: white;
-            padding: 14px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-        }
+        /* Suspended State */
+        .action-btn.suspended { background: #444; cursor: not-allowed; }
+
+        #warning-msg { text-align: center; margin-top: 10px; font-weight: bold; min-height: 20px; }
+        
+        #audio-player { width: 100%; margin-top: 20px; display: none; }
+        #download-btn { display: none; margin-top: 15px; text-align: center; background: #28a745; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -85,109 +61,141 @@
     </nav>
 
     <div class="tool-container">
-        <h1>🎙️ AI Voice Generator</h1>
-        <p>Uses 2 Engines to ensure audio works 100%.</p>
+        <h1>🎙️ Pro Text to Speech</h1>
+        <p>Convert text to MP3. <br><span style="color: #ff4757; font-size: 0.8rem;">(Note: Abusive content will lead to suspension)</span></p>
 
         <div class="tts-container">
-            <textarea id="text-input" placeholder="Type something here..."></textarea>
+            <textarea id="text-input" placeholder="Type text here..."></textarea>
 
-            <label>🗣️ Select Voice</label>
-            <select id="voice-select">
-                <optgroup label="🔥 High Quality (Engine 1)">
-                    <option value="Aditi">👩 Aditi (Hindi/Indian English)</option>
-                    <option value="Brian">👨 Brian (British English)</option>
-                    <option value="Salli">👩 Salli (US Female)</option>
-                    <option value="Matthew">👨 Matthew (US Male)</option>
-                </optgroup>
-                <optgroup label="🛡️ Backup (Engine 2)">
-                    <option value="google-hi">🇮🇳 Google Hindi</option>
-                    <option value="google-en">🇺🇸 Google English</option>
-                </optgroup>
-            </select>
+            <div class="controls-grid">
+                <div>
+                    <label>Language</label>
+                    <select id="language-select">
+                        <option value="en-us">🇺🇸 English (US)</option>
+                        <option value="en-gb">🇬🇧 English (UK)</option>
+                        <option value="hi-in">🇮🇳 Hindi</option>
+                        <option value="es-es">🇪🇸 Spanish</option>
+                        <option value="fr-fr">🇫🇷 French</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Speed</label>
+                    <input type="range" id="speed-range" min="-3" max="3" value="0" step="1">
+                </div>
+            </div>
 
-            <button class="action-btn" onclick="generateAudio()">Generate Audio</button>
+            <button id="gen-btn" class="action-btn" onclick="checkAndGenerate()">🔊 Generate Audio</button>
             
-            <p id="status-msg"></p>
+            <p id="warning-msg"></p>
 
             <audio id="audio-player" controls></audio>
-            <a id="download-btn" href="#" target="_blank">⬇️ Download Audio</a>
+            <a id="download-btn" href="#" download="speech.mp3">⬇️ Download MP3</a>
         </div>
-        
+
         <a href="index.html" class="back-btn">← Back to Home</a>
     </div>
 
     <script src="script.js"></script>
 
     <script>
-        function generateAudio() {
-            const text = document.getElementById('text-input').value.trim();
-            const voice = document.getElementById('voice-select').value;
-            const btn = document.querySelector('.action-btn');
-            const status = document.getElementById('status-msg');
-            const player = document.getElementById('audio-player');
-            const dlBtn = document.getElementById('download-btn');
+        // 🔴🔴 STEP 1: APNI KEY YAHAN DALEIN 🔴🔴
+        const API_KEY = '49ed1261a3ad40318f929f07d985c0b1'; 
 
-            if (!text) {
-                alert("Please write some text!");
+        // 🚫 LIST OF BAD WORDS (Aap aur add kar sakte hain)
+        const badWords = ["stupid", "idiot", "pagal", "kutta", "badword1", "badword2", "kill", "die"];
+
+        function checkAndGenerate() {
+            const textInput = document.getElementById('text-input');
+            const text = textInput.value.toLowerCase();
+            const btn = document.getElementById('gen-btn');
+            const msg = document.getElementById('warning-msg');
+
+            // 1. Check if User is Suspended
+            let strikes = localStorage.getItem('ttsStrikes') || 0;
+            if (strikes >= 3) {
+                msg.innerText = "⛔ You are SUSPENDED due to abusive content.";
+                msg.style.color = "red";
+                btn.classList.add('suspended');
+                btn.disabled = true;
+                btn.innerText = "🚫 Account Suspended";
                 return;
             }
 
-            // 1. Reset UI
-            btn.disabled = true;
-            btn.innerHTML = "⏳ Connecting...";
-            status.innerHTML = "Connecting to Audio Server...";
-            status.style.color = "#666";
-            player.style.display = "none";
-            dlBtn.style.display = "none";
+            if (!textInput.value.trim()) { alert("Please type something!"); return; }
 
-            let apiUrl = "";
+            // 2. Check for Bad Words
+            let foundBadWord = badWords.some(word => text.includes(word));
 
-            // 2. Select Engine based on Voice
-            if (voice.startsWith('google')) {
-                // Google Engine (Backup)
-                const lang = voice === 'google-hi' ? 'hi' : 'en';
-                apiUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=${lang}`;
-            } else {
-                // StreamElements Engine (High Quality)
-                apiUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${encodeURIComponent(text)}`;
+            if (foundBadWord) {
+                strikes++;
+                localStorage.setItem('ttsStrikes', strikes); // Save strike count
+                
+                textInput.classList.add('error-border'); // Shake effect
+                setTimeout(() => textInput.classList.remove('error-border'), 500);
+
+                if (strikes >= 3) {
+                    // SUSPEND NOW
+                    msg.innerText = "⛔ Limit Reached! You are now suspended.";
+                    msg.style.color = "red";
+                    btn.classList.add('suspended');
+                    btn.disabled = true;
+                    btn.innerText = "🚫 Account Suspended";
+                } else {
+                    // WARNING
+                    msg.innerText = `⚠️ Warning! Abusive words detected. Strike ${strikes}/3`;
+                    msg.style.color = "orange";
+                }
+                return; // Stop here, do not generate audio
             }
 
-            // 3. Load Audio
-            player.src = apiUrl;
-            player.load(); // Force load
+            // 3. If Clean, Generate Audio (VoiceRSS API)
+            msg.innerText = ""; // Clear warning
+            generateSpeech(textInput.value);
+        }
 
-            // 4. Success Handler
-            player.onloadeddata = function() {
-                status.innerHTML = "✅ Audio Generated!";
-                status.style.color = "green";
-                player.style.display = "block";
+        function generateSpeech(cleanText) {
+            const lang = document.getElementById('language-select').value;
+            const speed = document.getElementById('speed-range').value;
+            const btn = document.getElementById('gen-btn');
+            const player = document.getElementById('audio-player');
+            const dlBtn = document.getElementById('download-btn');
+
+            if (API_KEY === 'YOUR_API_KEY_HERE') { alert("API Key Missing!"); return; }
+
+            btn.innerHTML = "⏳ Processing...";
+            btn.disabled = true;
+
+            // 48khz Quality set ki hai taaki noise kam ho
+            const url = `https://api.voicerss.org/?key=${API_KEY}&hl=${lang}&src=${encodeURIComponent(cleanText)}&r=${speed}&c=MP3&f=48khz_16bit_stereo`;
+
+            player.src = url;
+            player.style.display = "block";
+            player.onloadeddata = () => {
                 player.play();
-                
-                dlBtn.href = apiUrl;
-                dlBtn.style.display = "block";
-                
+                btn.innerHTML = "🔊 Generate Audio";
                 btn.disabled = false;
-                btn.innerHTML = "Generate Audio";
+                dlBtn.href = url;
+                dlBtn.style.display = "block";
             };
-
-            // 5. Error Handler (Agar fail hua to)
-            player.onerror = function() {
-                status.innerHTML = "❌ Server Busy. Trying Backup Engine...";
-                status.style.color = "red";
-                
-                // Backup Try (Google)
-                setTimeout(() => {
-                    const backupUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=en`;
-                    player.src = backupUrl;
-                    player.play();
-                    status.innerHTML = "⚠️ Using Backup Server (Standard Quality)";
-                    status.style.color = "orange";
-                    player.style.display = "block";
-                    btn.disabled = false;
-                    btn.innerHTML = "Generate Audio";
-                }, 1000);
+            player.onerror = () => {
+                alert("Error! Check API Key or Text Limit.");
+                btn.innerHTML = "🔊 Generate Audio";
+                btn.disabled = false;
             };
         }
+
+        // Page load hone par check karo agar pehle se suspended hai
+        window.onload = function() {
+            if (localStorage.getItem('ttsStrikes') >= 3) {
+                const btn = document.getElementById('gen-btn');
+                const msg = document.getElementById('warning-msg');
+                msg.innerText = "⛔ You are SUSPENDED due to abusive content.";
+                msg.style.color = "red";
+                btn.classList.add('suspended');
+                btn.disabled = true;
+                btn.innerText = "🚫 Account Suspended";
+            }
+        };
     </script>
 </body>
 </html>
