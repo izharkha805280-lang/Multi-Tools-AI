@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct WhatsApp Sender (No Contact Save) - SuperTools</title>
+    <meta name="description" content="Send WhatsApp messages without saving the contact number. Fast, Secure & Free.">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .wa-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .input-group { margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; }
+
+        .phone-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        select {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            width: 100px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background: var(--bg-color);
+            color: var(--text-color);
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background: var(--bg-color);
+            color: var(--text-color);
+            resize: none;
+            outline: none;
+        }
+
+        .wa-btn {
+            width: 100%;
+            padding: 15px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .wa-btn:hover { background: #128C7E; transform: translateY(-2px); }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+        <button id="theme-toggle">🌙</button>
+    </nav>
+
+    <div class="tool-container">
+        <h1>🟢 Direct WhatsApp</h1>
+        <p>Chat with anyone without saving their number.</p>
+
+        <div class="wa-container">
+            
+            <div class="input-group">
+                <label>Phone Number</label>
+                <div class="phone-input-wrapper">
+                    <select id="country-code">
+                        <option value="91">🇮🇳 +91</option>
+                        <option value="1">🇺🇸 +1</option>
+                        <option value="44">🇬🇧 +44</option>
+                        <option value="92">🇵🇰 +92</option>
+                        <option value="880">🇧🇩 +880</option>
+                        <option value="971">🇦🇪 +971</option>
+                        <option value="966">🇸🇦 +966</option>
+                        <option value="61">🇦🇺 +61</option>
+                        <option value="1">🇨🇦 +1</option>
+                    </select>
+                    <input type="number" id="phone-number" placeholder="Enter Mobile Number">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Message (Optional)</label>
+                <textarea id="message" placeholder="Hi, I want to inquire about..."></textarea>
+            </div>
+
+            <button class="wa-btn" onclick="openWhatsApp()">
+                🚀 Open Chat
+            </button>
+
+        </div>
+
+        <div class="related-tools" style="margin-top: 50px;">
+            <h3>🔥 You Might Also Like:</h3>
+            <div class="mini-tools-grid">
+                <a href="qr-generator.html" class="mini-card"><span>📱</span><div>QR Code Maker</div></a>
+                <a href="ip-checker.html" class="mini-card"><span>🌐</span><div>Check IP</div></a>
+                <a href="text-to-speech.html" class="mini-card"><span>🗣️</span><div>Text to Speech</div></a>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        function openWhatsApp() {
+            const code = document.getElementById('country-code').value;
+            const number = document.getElementById('phone-number').value;
+            const msg = document.getElementById('message').value;
+
+            if (!number) {
+                alert("Please enter a valid mobile number!");
+                return;
+            }
+
+            // URL banana (Official WhatsApp API)
+            const url = `https://wa.me/${code}${number}?text=${encodeURIComponent(msg)}`;
+            
+            // New Tab mein kholna
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
