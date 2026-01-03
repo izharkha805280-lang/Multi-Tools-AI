@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free SEO Meta Tag Generator - SuperTools</title>
+    <meta name="description" content="Generate SEO-friendly Title, Description, and Keywords for your website or blog instantly.">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .seo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-group { margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: var(--text-color); }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background: var(--bg-color);
+            color: var(--text-color);
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        textarea { height: 100px; resize: vertical; }
+        input:focus, textarea:focus { border-color: var(--primary-color); }
+
+        /* Preview Box (Code Style) */
+        .code-preview {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .copy-btn:hover { opacity: 0.8; }
+
+        .gen-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #6C63FF 0%, #4834d4 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .gen-btn:hover { transform: translateY(-2px); }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+        <button id="theme-toggle">🌙</button>
+    </nav>
+
+    <div class="tool-container">
+        <h1>🏷️ SEO Tag Generator</h1>
+        <p>Create perfect Meta Tags for better Google Ranking.</p>
+
+        <div class="seo-container">
+            
+            <div class="form-group">
+                <label>Site Title (Page Name)</label>
+                <input type="text" id="site-title" placeholder="e.g. Best Pizza Recipe">
+            </div>
+
+            <div class="form-group">
+                <label>Site Description (Summary)</label>
+                <textarea id="site-desc" placeholder="e.g. Learn how to make the best pizza at home..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Keywords (Separate by comma)</label>
+                <input type="text" id="site-keywords" placeholder="e.g. pizza, recipe, cooking, food">
+            </div>
+
+            <div class="form-group">
+                <label>Author Name</label>
+                <input type="text" id="site-author" placeholder="Your Name">
+            </div>
+
+            <button class="gen-btn" onclick="generateTags()">⚡ Generate Meta Tags</button>
+
+            <div class="code-preview" id="result-box" style="display: none;">
+                <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+                <div id="code-content"></div>
+            </div>
+
+        </div>
+
+        <div class="related-tools" style="margin-top: 50px;">
+            <h3>🔥 You Might Also Like:</h3>
+            <div class="mini-tools-grid">
+                <a href="word-counter.html" class="mini-card"><span>📝</span><div>Word Counter</div></a>
+                <a href="speed-test.html" class="mini-card"><span>🚀</span><div>Speed Test</div></a>
+                <a href="qr-generator.html" class="mini-card"><span>📱</span><div>QR Code Maker</div></a>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        function generateTags() {
+            const title = document.getElementById('site-title').value;
+            const desc = document.getElementById('site-desc').value;
+            const keywords = document.getElementById('site-keywords').value;
+            const author = document.getElementById('site-author').value;
+
+            if(!title) { alert("Please enter a Title!"); return; }
+
+            // Create HTML Code
+            const code = `<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<meta name="description" content="${desc}">
+<meta name="keywords" content="${keywords}">
+<meta name="author" content="${author}">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${desc}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${desc}">`;
+
+            // Show Result
+            document.getElementById('code-content').innerText = code;
+            document.getElementById('result-box').style.display = 'block';
+        }
+
+        function copyCode() {
+            const codeText = document.getElementById('code-content').innerText;
+            navigator.clipboard.writeText(codeText);
+            
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = "Copied!";
+            setTimeout(() => btn.innerText = "Copy Code", 2000);
+        }
+    </script>
+</body>
+</html>
