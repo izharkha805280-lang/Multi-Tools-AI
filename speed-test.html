@@ -1,153 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Internet Speed Test - SuperTools</title>
-    <meta name="description" content="Check your internet download speed instantly. Fast, precise, and works on mobile/desktop.">
-    
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        .speed-container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        /* Speedometer Circle */
-        .meter-box {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 30px auto;
-            border-radius: 50%;
-            background: conic-gradient(
-                #ddd 0deg, 
-                #ddd 360deg
-            );
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.5s;
-        }
-        
-        /* Inner Circle */
-        .meter-inner {
-            width: 220px;
-            height: 220px;
-            background: var(--card-bg);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .speed-value {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .unit { font-size: 1rem; color: #888; text-transform: uppercase; }
-
-        /* Start Button */
-        .start-btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
-            transition: 0.3s;
-        }
-        .start-btn:hover { transform: scale(1.05); }
-        .start-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
-
-        /* Status Text */
-        #status-text { margin-top: 20px; font-weight: bold; color: var(--text-color); }
-
-    </style>
-</head>
-<body>
-
-    <nav class="navbar">
-        <a href="index.html" class="logo">SuperTools.</a>
-        <button id="theme-toggle">🌙</button>
-    </nav>
-
-    <div class="tool-container">
-        <h1>🚀 Internet Speed Test</h1>
-        <p>Check your Download Speed in seconds.</p>
-
-        <div class="speed-container">
-            
-            <div class="meter-box" id="meter">
-                <div class="meter-inner">
-                    <span class="speed-value" id="speed-display">0.0</span>
-                    <span class="unit">Mbps</span>
-                </div>
-            </div>
-
-            <button class="start-btn" id="start-btn" onclick="startTest()">GO</button>
-            <p id="status-text">Click GO to start...</p>
-
-        </div>
-
-        <div class="related-tools" style="margin-top: 50px;">
-            <h3>🔥 You Might Also Like:</h3>
-            <div class="mini-tools-grid">
-                <a href="ip-checker.html" class="mini-card"><span>🌐</span><div>My IP Info</div></a>
-                <a href="image-compressor.html" class="mini-card"><span>📉</span><div>Image Compressor</div></a>
-                <a href="whatsapp-direct.html" class="mini-card"><span>💬</span><div>Direct WA</div></a>
-            </div>
-        </div>
-
-        <a href="index.html" class="back-btn">← Back to Home</a>
-    </div>
-
-    <script src="script.js"></script>
-
-    <script>
+<script>
         const speedDisplay = document.getElementById('speed-display');
         const startBtn = document.getElementById('start-btn');
         const statusText = document.getElementById('status-text');
         const meter = document.getElementById('meter');
 
-        // Test File URL (Using a fast CDN image ~5MB)
-        const imageAddr = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg"; 
-        const downloadSize = 5000000; // Approx bytes
+        // 1.5MB Image (Perfect for both slow & fast net)
+        const imageAddr = "https://upload.wikimedia.org/wikipedia/commons/b/b9/Piz_igls_main.jpg"; 
+        const downloadSize = 1500000; // Approx 1.5 MB in bytes
 
         function startTest() {
+            // 1. Reset UI
             startBtn.disabled = true;
             startBtn.innerText = "Testing...";
             statusText.innerText = "Connecting to server...";
+            statusText.style.color = "var(--text-color)";
             speedDisplay.innerText = "0.0";
             
-            // Simulation Animation
+            // 2. Fake Animation (Looks cool while loading)
             let fakeSpeed = 0;
             const animInterval = setInterval(() => {
-                fakeSpeed = Math.floor(Math.random() * 50) + 10;
+                fakeSpeed = Math.floor(Math.random() * 20) + 1; 
                 speedDisplay.innerText = fakeSpeed;
                 updateMeter(fakeSpeed);
-            }, 100);
+            }, 150);
 
+            // 3. Start Real Download
             const startTime = (new Date()).getTime();
             const download = new Image();
             
-            // Actual Speed Test Logic
+            // Logic jab download khatam ho
             download.onload = function () {
-                clearInterval(animInterval); // Stop fake animation
+                clearInterval(animInterval); // Fake animation roko
+                
                 const endTime = (new Date()).getTime();
-                const duration = (endTime - startTime) / 1000;
+                const duration = (endTime - startTime) / 1000; // Seconds mein time
+                
+                // Speed Formula: (Bits / Seconds) / (1024*1024) = Mbps
                 const bitsLoaded = downloadSize * 8;
                 const speedBps = bitsLoaded / duration;
                 const speedMbps = (speedBps / (1024 * 1024)).toFixed(2);
@@ -155,23 +43,31 @@
                 showFinalResult(speedMbps);
             };
 
+            // Error Handling
             download.onerror = function () {
                 clearInterval(animInterval);
                 startBtn.disabled = false;
                 startBtn.innerText = "Retry";
-                statusText.innerText = "Error connecting. Try again.";
+                statusText.innerText = "Error! Check internet connection.";
+                statusText.style.color = "red";
             };
 
-            // Start Download (Add random query to prevent cache)
+            // 🔴 IMPORTANT: Cache Buster Logic
+            // ?n=Math.random() lagane se browser har baar naya download karega
             download.src = imageAddr + "?n=" + Math.random();
         }
 
         function showFinalResult(speed) {
-            // Animate to final number
             speedDisplay.innerText = speed;
             updateMeter(speed);
             
-            statusText.innerText = `✅ Test Complete! Your Speed: ${speed} Mbps`;
+            // Message based on speed
+            let msg = "";
+            if(speed < 1) msg = "Slow (2G/3G)";
+            else if(speed < 10) msg = "Average (4G)";
+            else msg = "Fast (WiFi/5G)";
+
+            statusText.innerText = `✅ Speed: ${speed} Mbps (${msg})`;
             statusText.style.color = "#00b894";
             
             startBtn.disabled = false;
@@ -179,11 +75,9 @@
         }
 
         function updateMeter(value) {
-            // Visual Circle Update
-            const percent = Math.min(value, 100); // Cap at 100 for visual
+            // Visual Circle - Max limit 20 for visual purpose
+            const percent = Math.min(value, 20) * 5; // 20Mbps = 100% rotation
             const degrees = (percent / 100) * 360;
             meter.style.background = `conic-gradient(var(--primary-color) ${degrees}deg, #ddd ${degrees}deg)`;
         }
-    </script>
-</body>
-</html>
+</script>
