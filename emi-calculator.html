@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator (Home, Car, Personal Loan) - SuperTools</title>
+    <meta name="description" content="Calculate your Loan EMI instantly with graphical breakdown. Best for Home Loan, Car Loan, and Personal Loan.">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .emi-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: left;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .inputs-section { flex: 1; min-width: 300px; }
+        .result-section { flex: 1; min-width: 300px; text-align: center; }
+
+        .input-group { margin-bottom: 25px; }
+        label { font-weight: bold; display: block; margin-bottom: 10px; color: var(--text-color); }
+        
+        input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background: var(--bg-color);
+            color: var(--text-color);
+            outline: none;
+        }
+        input[type="range"] { padding: 0; cursor: pointer; height: 10px; accent-color: var(--primary-color); }
+
+        .calc-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #6C63FF 0%, #4834d4 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .calc-btn:hover { transform: translateY(-2px); }
+
+        /* Results Design */
+        .result-box {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+        .emi-value { font-size: 2rem; font-weight: bold; color: #2ecc71; }
+        .breakdown p { margin: 5px 0; font-size: 0.9rem; }
+
+        canvas { max-width: 300px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+        <button id="theme-toggle">🌙</button>
+    </nav>
+
+    <div class="tool-container">
+        <h1>💸 Loan EMI Calculator</h1>
+        <p>Calculate EMI for Home, Car, or Personal Loans with Graph.</p>
+
+        <div class="emi-container">
+            
+            <div class="inputs-section">
+                
+                <div class="input-group">
+                    <label>Loan Amount: ₹ <span id="amt-val">500000</span></label>
+                    <input type="range" id="amount" min="10000" max="10000000" value="500000" step="10000">
+                </div>
+
+                <div class="input-group">
+                    <label>Interest Rate (%): <span id="rate-val">10</span>%</label>
+                    <input type="range" id="rate" min="1" max="30" value="10" step="0.1">
+                </div>
+
+                <div class="input-group">
+                    <label>Tenure (Years): <span id="year-val">5</span> Years</label>
+                    <input type="range" id="years" min="1" max="30" value="5" step="1">
+                </div>
+
+                <button class="calc-btn" onclick="calculateEMI()">🔄 Recalculate</button>
+            </div>
+
+            <div class="result-section">
+                <div class="result-box">
+                    <p>Monthly EMI</p>
+                    <div class="emi-value">₹ <span id="monthly-emi">0</span></div>
+                </div>
+
+                <div class="breakdown">
+                    <p>Total Interest: <b>₹ <span id="total-interest">0</span></b></p>
+                    <p>Total Payment: <b>₹ <span id="total-payment">0</span></b></p>
+                </div>
+
+                <canvas id="emiChart"></canvas>
+            </div>
+
+        </div>
+
+        <div class="related-tools" style="margin-top: 50px;">
+            <h3>🔥 You Might Also Like:</h3>
+            <div class="mini-tools-grid">
+                <a href="age-calculator.html" class="mini-card"><span>📅</span><div>Age Calculator</div></a>
+                <a href="ip-checker.html" class="mini-card"><span>🌐</span><div>IP Checker</div></a>
+                <a href="speed-test.html" class="mini-card"><span>🚀</span><div>Speed Test</div></a>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        // Initialize Inputs
+        const amountSlider = document.getElementById('amount');
+        const rateSlider = document.getElementById('rate');
+        const yearSlider = document.getElementById('years');
+
+        // Update Values on Slide
+        amountSlider.oninput = () => document.getElementById('amt-val').innerText = amountSlider.value;
+        rateSlider.oninput = () => document.getElementById('rate-val').innerText = rateSlider.value;
+        yearSlider.oninput = () => document.getElementById('year-val').innerText = yearSlider.value;
+
+        let myChart = null;
+
+        function calculateEMI() {
+            const P = parseFloat(amountSlider.value);
+            const r = parseFloat(rateSlider.value) / 12 / 100; // Monthly Rate
+            const n = parseFloat(yearSlider.value) * 12; // Months
+
+            // Formula: EMI = [P x r x (1+r)^n] / [(1+r)^n - 1]
+            const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            
+            const totalPayment = emi * n;
+            const totalInterest = totalPayment - P;
+
+            // Update Text
+            document.getElementById('monthly-emi').innerText = Math.round(emi).toLocaleString();
+            document.getElementById('total-interest').innerText = Math.round(totalInterest).toLocaleString();
+            document.getElementById('total-payment').innerText = Math.round(totalPayment).toLocaleString();
+
+            // Update Chart
+            updateChart(P, totalInterest);
+        }
+
+        function updateChart(principal, interest) {
+            const ctx = document.getElementById('emiChart').getContext('2d');
+            
+            if (myChart) myChart.destroy(); // Clear old chart
+
+            myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Principal Amount', 'Total Interest'],
+                    datasets: [{
+                        data: [principal, interest],
+                        backgroundColor: ['#6C63FF', '#ff4757'],
+                        borderWidth: 0
+                    }]
+                }
+            });
+        }
+
+        // Run on Load
+        window.onload = calculateEMI;
+    </script>
+</body>
+</html>
