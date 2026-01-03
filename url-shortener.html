@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free URL Shortener - SuperTools</title>
+    <meta name="description" content="Shorten long URLs instantly for free. Best TinyURL alternative.">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .shortener-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            padding-right: 50px; /* Space for icon */
+        }
+
+        .result-box {
+            display: none; /* Hidden initially */
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px dashed var(--primary-color);
+            text-align: center;
+        }
+
+        .short-url {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            word-break: break-all;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .copy-btn {
+            background: #2ecc71;
+            width: auto;
+            padding: 10px 30px;
+            display: inline-block;
+        }
+        .copy-btn:hover { background: #27ae60; }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 4px solid rgba(108, 99, 255, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SuperTools.</a>
+        <button id="theme-toggle">🌙</button>
+    </nav>
+
+    <div class="tool-container">
+        <h1>🔗 URL Shortener</h1>
+        <p>Paste your long link below to make it short & sweet.</p>
+
+        <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            </div>
+
+        <div class="shortener-container">
+            
+            <div class="input-group">
+                <label style="font-weight: bold; margin-bottom: 10px; display: block;">Paste Long URL</label>
+                <input type="url" id="long-url" placeholder="https://www.amazon.in/very-long-product-link...">
+            </div>
+
+            <button class="gen-btn" onclick="shortenUrl()">✂️ Shorten URL</button>
+
+            <div class="spinner" id="loader"></div>
+
+            <div class="result-box" id="result-area">
+                <p style="margin-bottom: 5px; color: #888;">Your Short Link:</p>
+                <span class="short-url" id="short-link">https://tinyurl.com/xyz</span>
+                
+                <button class="copy-btn" onclick="copyLink()">📋 Copy Link</button>
+                <a href="#" target="_blank" id="open-link" style="margin-left: 10px; text-decoration: underline;">Test Link ↗</a>
+            </div>
+
+        </div>
+
+        <div class="seo-content">
+            <h2>Why use a URL Shortener?</h2>
+            <p>Long links look messy and are hard to share. Our free URL Shortener transforms long URLs into short, manageable links that are perfect for social media, emails, and messages.</p>
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        async function shortenUrl() {
+            const longUrl = document.getElementById('long-url').value;
+            const loader = document.getElementById('loader');
+            const resultArea = document.getElementById('result-area');
+            const shortLinkDisplay = document.getElementById('short-link');
+            const openLink = document.getElementById('open-link');
+
+            // Validation
+            if (!longUrl) { alert("Please paste a URL first!"); return; }
+            
+            // Check if http is present
+            let finalUrl = longUrl;
+            if (!longUrl.startsWith('http://') && !longUrl.startsWith('https://')) {
+                finalUrl = 'https://' + longUrl;
+            }
+
+            // UI Changes
+            loader.style.display = 'block';
+            resultArea.style.display = 'none';
+
+            try {
+                // Using TinyURL API (No Key Required)
+                const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(finalUrl)}`);
+                
+                if (response.ok) {
+                    const shortUrl = await response.text();
+                    
+                    // Show Result
+                    loader.style.display = 'none';
+                    resultArea.style.display = 'block';
+                    shortLinkDisplay.innerText = shortUrl;
+                    openLink.href = shortUrl;
+                } else {
+                    throw new Error("API Error");
+                }
+            } catch (error) {
+                loader.style.display = 'none';
+                alert("Error shortening URL. Please check your internet or try a different link.");
+            }
+        }
+
+        function copyLink() {
+            const text = document.getElementById('short-link').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Link Copied! ✅");
+            });
+        }
+    </script>
+</body>
+</html>
