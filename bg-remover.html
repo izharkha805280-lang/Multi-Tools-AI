@@ -193,7 +193,7 @@
 
     <script src="script.js"></script>
 
-    <script>
+<script>
         let currentBg = 'transparent';
 
         async function processImage(input) {
@@ -202,12 +202,18 @@
 
             // Show Editor & Loader
             document.querySelector('.upload-box').style.display = 'none';
-            document.getElementById('editorArea').style.display = 'grid'; // Grid layout for desktop
+            document.getElementById('editorArea').style.display = 'grid'; 
             document.getElementById('loader').style.display = 'flex';
 
             try {
-                // Using @imgly/background-removal (Runs in browser!)
-                const imageBlob = await imglyRemoveBackground(file);
+                // ✅ FIX: Model Assets ka sahi Path batana zaroori hai
+                const config = {
+                    publicPath: "https://static.imgly.com/lib/background-removal-data/1.0.3/dist/",
+                    // Ye setting ensure karti hai ki AI model files server se sahi load hon
+                };
+
+                // AI Processing Start
+                const imageBlob = await imglyRemoveBackground(file, config);
                 
                 // Show Result
                 const url = URL.createObjectURL(imageBlob);
@@ -219,9 +225,12 @@
                 };
 
             } catch (error) {
-                console.error(error);
-                alert("Error removing background. Please try a simpler image.");
-                location.reload();
+                console.error("Error Detail:", error);
+                document.getElementById('loader').style.display = 'none';
+                alert("Error: Could not process image. Please try a different image or check internet connection.");
+                // Error aane par wapas upload screen dikhayein
+                document.querySelector('.upload-box').style.display = 'block';
+                document.getElementById('editorArea').style.display = 'none';
             }
         }
 
@@ -229,7 +238,6 @@
             const wrapper = document.getElementById('canvasWrapper');
             wrapper.style.background = color;
             
-            // If transparent, use checkerboard pattern
             if(color === 'transparent') {
                 wrapper.style.backgroundImage = "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC440b0fMAAAAC1JREFUOE9jcnJy+s9AAWD6/PnznwYGBigfZBq4AGQOSB2MD8aP6gdGg8rB8AAAWUYXjW913rAAAAAASUVORK5CYII=')";
             }
@@ -248,44 +256,16 @@
         }
 
         function downloadImage() {
-            // We need to draw HTML to Canvas to merge background + image
-            const wrapper = document.getElementById('canvasWrapper');
             const img = document.getElementById('resultImg');
             
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            canvas.width = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-
-            // 1. Draw Background
-            if (currentBg !== 'transparent') {
-                ctx.fillStyle = currentBg;
-                
-                // If it's a gradient or color
-                if(!currentBg.includes('url')) {
-                    ctx.fillStyle = currentBg; // Note: Simple colors work, complex CSS gradients might need more logic but this fits basic needs
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                } else {
-                    // For custom images, simple download won't merge CSS background perfectly without html2canvas
-                    // For now, we will download the PNG (transparent) if user wants full edit control
-                    // OR we stick to simple color fills.
-                    // UPGRADE: Let's assume user wants the Transparent PNG mostly.
-                }
-            }
-
-            // 2. Draw Image
-            ctx.drawImage(img, 0, 0);
-
-            // 3. Download
+            // Create a temporary link to download
             const link = document.createElement('a');
             link.download = 'removed-bg-supertools.png';
-            link.href = img.src; // Downloading the Clean PNG (Best Quality)
+            link.href = img.src;
+            document.body.appendChild(link);
             link.click();
-            
-            // NOTE: Merging custom background requires 'html2canvas' library which is heavy.
-            // Currently, this button downloads the Transparent PNG.
+            document.body.removeChild(link);
         }
-    </script>
+</script>
 </body>
   </html>
