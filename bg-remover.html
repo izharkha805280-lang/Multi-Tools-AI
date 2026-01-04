@@ -199,21 +199,25 @@
             const file = input.files[0];
             if (!file) return;
 
-            // 1. UI Updates (Loader dikhao)
+            // UI Reset
             document.querySelector('.upload-box').style.display = 'none';
             document.getElementById('editorArea').style.display = 'grid'; 
             document.getElementById('loader').style.display = 'flex';
 
             try {
-                // ✅ FIX: Version 1.0.4 ka sahi CDN link
+                // ✅ FINAL FIX: Configuration Update
                 const config = {
                     publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.4/dist/",
+                    debug: true, // Errors console me dikhayega
+                    progress: (key, current, total) => {
+                        console.log(`Downloading ${key}: ${current} of ${total}`);
+                    }
                 };
 
-                // 2. AI Processing Start
+                // AI Processing
                 const imageBlob = await imglyRemoveBackground(file, config);
                 
-                // 3. Result Show Karna
+                // Result Show
                 const url = URL.createObjectURL(imageBlob);
                 const resultImg = document.getElementById('resultImg');
                 resultImg.src = url;
@@ -223,11 +227,11 @@
                 };
 
             } catch (error) {
-                console.error("Error Detail:", error);
+                console.error("FULL ERROR:", error);
                 document.getElementById('loader').style.display = 'none';
                 
-                // Error Message
-                alert("Error: Internet issue or Browser not supported. Please try Chrome/Edge and check internet.");
+                // Error Message with Tip
+                alert("Error: Browser issue detected.\n\n1. Try using GOOGLE CHROME.\n2. Check Internet.\n3. Wait 10 seconds and try again.");
                 
                 // Reset UI
                 document.querySelector('.upload-box').style.display = 'block';
@@ -238,7 +242,6 @@
         function setBg(color) {
             const wrapper = document.getElementById('canvasWrapper');
             wrapper.style.background = color;
-            
             if(color === 'transparent') {
                 wrapper.style.backgroundImage = "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC440b0fMAAAAC1JREFUOE9jcnJy+s9AAWD6/PnznwYGBigfZBq4AGQOSB2MD8aP6gdGg8rB8AAAWUYXjW913rAAAAAASUVORK5CYII=')";
             }
@@ -258,7 +261,6 @@
 
         function downloadImage() {
             const img = document.getElementById('resultImg');
-            // Download Logic
             const link = document.createElement('a');
             link.download = 'removed-bg-supertools.png';
             link.href = img.src;
@@ -266,7 +268,7 @@
             link.click();
             document.body.removeChild(link);
         }
-                    </script>
+</script>
 
 </body>
   </html>
