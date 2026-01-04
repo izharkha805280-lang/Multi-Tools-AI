@@ -192,7 +192,6 @@
     </div>
 
     <script src="script.js"></script>
-
 <script>
         let currentBg = 'transparent';
 
@@ -200,22 +199,21 @@
             const file = input.files[0];
             if (!file) return;
 
-            // Show Editor & Loader
+            // 1. UI Updates (Loader dikhao)
             document.querySelector('.upload-box').style.display = 'none';
             document.getElementById('editorArea').style.display = 'grid'; 
             document.getElementById('loader').style.display = 'flex';
 
             try {
-                // ✅ FIX: Model Assets ka sahi Path batana zaroori hai
+                // ✅ FIX: Version 1.0.4 ka sahi CDN link
                 const config = {
-                    publicPath: "https://static.imgly.com/lib/background-removal-data/1.0.3/dist/",
-                    // Ye setting ensure karti hai ki AI model files server se sahi load hon
+                    publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.4/dist/",
                 };
 
-                // AI Processing Start
+                // 2. AI Processing Start
                 const imageBlob = await imglyRemoveBackground(file, config);
                 
-                // Show Result
+                // 3. Result Show Karna
                 const url = URL.createObjectURL(imageBlob);
                 const resultImg = document.getElementById('resultImg');
                 resultImg.src = url;
@@ -227,8 +225,11 @@
             } catch (error) {
                 console.error("Error Detail:", error);
                 document.getElementById('loader').style.display = 'none';
-                alert("Error: Could not process image. Please try a different image or check internet connection.");
-                // Error aane par wapas upload screen dikhayein
+                
+                // Error Message
+                alert("Error: Internet issue or Browser not supported. Please try Chrome/Edge and check internet.");
+                
+                // Reset UI
                 document.querySelector('.upload-box').style.display = 'block';
                 document.getElementById('editorArea').style.display = 'none';
             }
@@ -257,8 +258,7 @@
 
         function downloadImage() {
             const img = document.getElementById('resultImg');
-            
-            // Create a temporary link to download
+            // Download Logic
             const link = document.createElement('a');
             link.download = 'removed-bg-supertools.png';
             link.href = img.src;
@@ -266,6 +266,7 @@
             link.click();
             document.body.removeChild(link);
         }
-</script>
+                    </script>
+
 </body>
   </html>
