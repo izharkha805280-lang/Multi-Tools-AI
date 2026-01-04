@@ -202,5 +202,36 @@ Code mein humne ek image ka naam likha hai: `banner.jpg`. Ab humein ye image web
         }
     </script>
     <script src="script.js"></script>
+    <button class="support-btn" onclick="toggleDonation()">
+    ☕ Donate for Domain
+</button>
+
+<div class="donation-modal" id="donationBox">
+    <div class="modal-content">
+        <span class="close-btn" onclick="toggleDonation()">&times;</span>
+        
+        <h2>☕ Buy me a Coffee</h2>
+        <p>Help us buy a <b>.com Domain</b> & Server.</p>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Secure Payment via UPI</p>
+
+        <div class="amount-grid">
+            <button class="amt-btn active" onclick="setAmount(10)">₹10</button>
+            <button class="amt-btn" onclick="setAmount(20)">₹20</button>
+            <button class="amt-btn" onclick="setAmount(30)">₹30</button>
+            <button class="amt-btn" onclick="setAmount(40)">₹40</button>
+            <button class="amt-btn" onclick="setAmount(50)">₹50</button>
+        </div>
+
+        <div class="qr-box">
+            <img id="upi-qr" src="" alt="Scan to Pay">
+        </div>
+
+        <a id="pay-link" href="" class="pay-now-btn">Pay ₹10 via UPI App</a>
+        
+        <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">
+            Supported: GPay, PhonePe, Paytm, BHIM
+        </p>
+    </div>
+</div>
 </body>
 </html>
