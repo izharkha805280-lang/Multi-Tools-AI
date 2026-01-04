@@ -192,6 +192,7 @@
     </div>
 
     <script src="script.js"></script>
+
 <script>
         let currentBg = 'transparent';
 
@@ -199,25 +200,26 @@
             const file = input.files[0];
             if (!file) return;
 
-            // UI Reset
+            // 1. UI Setup
             document.querySelector('.upload-box').style.display = 'none';
             document.getElementById('editorArea').style.display = 'grid'; 
             document.getElementById('loader').style.display = 'flex';
 
             try {
-                // ✅ FINAL FIX: Configuration Update
+                // 🔹 STEP A: Resize Image (Mobile Crash Fix)
+                // बड़ी फोटो को छोटा करेंगे ताकि मोबाइल की रैम फुल न हो
+                const resizedBlob = await resizeImage(file, 1024); // Max size 1024px
+
+                // 🔹 STEP B: AI Configuration (Unpkg CDN)
                 const config = {
-                    publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.4/dist/",
-                    debug: true, // Errors console me dikhayega
-                    progress: (key, current, total) => {
-                        console.log(`Downloading ${key}: ${current} of ${total}`);
-                    }
+                    publicPath: "https://unpkg.com/@imgly/background-removal@1.0.4/dist/", 
+                    debug: true
                 };
 
-                // AI Processing
-                const imageBlob = await imglyRemoveBackground(file, config);
+                // 🔹 STEP C: Run AI
+                const imageBlob = await imglyRemoveBackground(resizedBlob, config);
                 
-                // Result Show
+                // Show Result
                 const url = URL.createObjectURL(imageBlob);
                 const resultImg = document.getElementById('resultImg');
                 resultImg.src = url;
@@ -227,16 +229,50 @@
                 };
 
             } catch (error) {
-                console.error("FULL ERROR:", error);
+                console.error("Error Detail:", error);
                 document.getElementById('loader').style.display = 'none';
                 
-                // Error Message with Tip
-                alert("Error: Browser issue detected.\n\n1. Try using GOOGLE CHROME.\n2. Check Internet.\n3. Wait 10 seconds and try again.");
+                alert("Error: Mobile Memory Full or Network Blocked.\n\nTip: Try a smaller image or use Laptop.");
                 
                 // Reset UI
                 document.querySelector('.upload-box').style.display = 'block';
                 document.getElementById('editorArea').style.display = 'none';
             }
+        }
+
+        // 🛠️ Helper Function: Image Resizer
+        function resizeImage(file, maxSize) {
+            return new Promise((resolve) => {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Calculate new size
+                    if (width > height) {
+                        if (width > maxSize) {
+                            height *= maxSize / width;
+                            width = maxSize;
+                        }
+                    } else {
+                        if (height > maxSize) {
+                            width *= maxSize / height;
+                            height = maxSize;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg', 0.9);
+                };
+            });
         }
 
         function setBg(color) {
@@ -268,7 +304,6 @@
             link.click();
             document.body.removeChild(link);
         }
-</script>
-
+                            </script>
 </body>
   </html>
