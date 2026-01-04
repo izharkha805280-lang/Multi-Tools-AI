@@ -202,6 +202,51 @@ Code mein humne ek image ka naam likha hai: `banner.jpg`. Ab humein ye image web
         }
     </script>
     <script src="script.js"></script>
+    <script>
+    // 🔴 APNI UPI ID YAHAN LIKHEIN (BINA GALTI KIYE)
+    const myUPI = "8052803520@ybl";  // Example: "rahul@okicici"
+    const myName = "SuperTools";       // Payment par ye naam dikhega
+
+    let currentAmount = 10;
+
+    function toggleDonation() {
+        const modal = document.getElementById('donationBox');
+        if (modal.style.display === "flex") {
+            modal.style.display = "none";
+        } else {
+            modal.style.display = "flex";
+            generateQR(10); // Open hone par default 10 wala dikhaye
+        }
+    }
+
+    function setAmount(amount) {
+        currentAmount = amount;
+        
+        // Button ka color change karein
+        let buttons = document.querySelectorAll('.amt-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        generateQR(amount);
+    }
+
+    function generateQR(amount) {
+        // UPI Link Format
+        const upiLink = `upi://pay?pa=${myUPI}&pn=${myName}&am=${amount}&cu=INR`;
+        
+        // 1. QR Code Generate karein (API se)
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
+        document.getElementById('upi-qr').src = qrUrl;
+
+        // 2. Pay Button Link Set karein
+        const btn = document.getElementById('pay-link');
+        btn.href = upiLink;
+        btn.innerText = `Pay ₹${amount} via App`;
+    }
+    
+    // Initial Load
+    generateQR(10);
+    </script>
     <button class="support-btn" onclick="toggleDonation()">
     ☕ Donate for Domain
 </button>
